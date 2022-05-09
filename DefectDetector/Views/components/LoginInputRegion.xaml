@@ -1,0 +1,77 @@
+﻿<UserControl x:Class="DefectDetector.Views.components.LoginInputRegion"
+             xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
+             xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+             xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006" 
+             xmlns:d="http://schemas.microsoft.com/expression/blend/2008" 
+             xmlns:materialDesign="http://materialdesigninxaml.net/winfx/xaml/themes"
+             xmlns:helper="clr-namespace:DefectDetector.Helper"
+             xmlns:prism="http://prismlibrary.com/"
+             xmlns:local="clr-namespace:DefectDetector.Views.components"
+             mc:Ignorable="d" 
+             d:DesignHeight="230" d:DesignWidth="300">
+    <UserControl.Resources>
+        <Storyboard x:Key="ShowUserContent">
+            <DoubleAnimationUsingKeyFrames Storyboard.TargetProperty="(UIElement.Opacity)" Storyboard.TargetName="grid">
+                <EasingDoubleKeyFrame KeyTime="0" Value="0"/>
+                <EasingDoubleKeyFrame KeyTime="0:0:1" Value="0"/>
+                <EasingDoubleKeyFrame KeyTime="0:0:1.5" Value="1"/>
+            </DoubleAnimationUsingKeyFrames>
+        </Storyboard>
+        <Storyboard x:Key="LoginFailed" AutoReverse="True">
+            <DoubleAnimationUsingKeyFrames Storyboard.TargetProperty="(UIElement.Opacity)">
+                <EasingDoubleKeyFrame KeyTime="0" Value="0"/>
+                <EasingDoubleKeyFrame KeyTime="0:0:1" Value="1"/>
+                <EasingDoubleKeyFrame KeyTime="0:0:1.5" Value="1"/>
+            </DoubleAnimationUsingKeyFrames>
+        </Storyboard>
+    </UserControl.Resources>
+    <UserControl.Triggers>
+        <EventTrigger RoutedEvent="FrameworkElement.Loaded">
+            <BeginStoryboard Storyboard="{StaticResource ShowUserContent}"/>
+        </EventTrigger>
+    </UserControl.Triggers>
+    <Grid x:Name="grid">
+        <TextBox 
+            materialDesign:HintAssist.Hint="UserName" 
+            Style="{StaticResource MaterialDesignFloatingHintTextBox}" 
+            Foreground="White"
+            BorderBrush="White"
+            Width="250"
+            Margin="25,10,25,0"
+            VerticalAlignment="Top" 
+            Text="{Binding InputName, Mode=TwoWay,UpdateSourceTrigger=PropertyChanged}"/>
+        <PasswordBox x:Name="FloatingPasswordBox"
+                     Foreground="White"
+                     BorderBrush="White"
+                     materialDesign:HintAssist.Hint=" Password"
+                     materialDesign:HintAssist.Foreground="{StaticResource SecondaryAccentBrush}"
+                     materialDesign:TextFieldAssist.UnderlineBrush="{StaticResource SecondaryAccentBrush}"
+                     Style="{StaticResource MaterialDesignFloatingHintPasswordBox}"
+                     Width="250"
+                     Margin="25,70,25,0"
+                     VerticalAlignment="Top"
+                     helper:BindedPasswordHelper.IsPasswordBindingEnabled="True" 
+                     helper:BindedPasswordHelper.BindedPassword="{Binding InputPassword,Mode=TwoWay,UpdateSourceTrigger=PropertyChanged}"
+                     />
+        <Button Background="{StaticResource SecondaryAccentBrush}" BorderBrush="{x:Null}" VerticalAlignment="Bottom" Margin="25,0,25,45" Command="{Binding LoginCommand}" Cursor="Hand">
+            <StackPanel Orientation="Horizontal" >
+                <materialDesign:PackIcon Kind="HeadCheck" Width="20" Height="20" Foreground="{StaticResource SecondaryAccentForegroundBrush}"/>
+                <TextBlock Text="   Login" VerticalAlignment="Center" Foreground="{StaticResource SecondaryAccentForegroundBrush}"/>
+            </StackPanel>
+        </Button>
+        <TextBlock x:Name="textblock" Text="{Binding PromptText}" Foreground="#FFFF4A00" Height="25" Width="120" Margin="0,110.74,25,94.26" Opacity="0" HorizontalAlignment="Right" TextAlignment="Right">
+            <TextBlock.Style>
+                <Style TargetType="TextBlock">
+                    <Style.Triggers>
+                        <DataTrigger Binding="{Binding IsLogin}" Value="false">
+                            <DataTrigger.EnterActions>
+                                <BeginStoryboard Storyboard="{StaticResource LoginFailed}"/>
+                            </DataTrigger.EnterActions>
+                        </DataTrigger>
+                    </Style.Triggers>
+                </Style>
+            </TextBlock.Style>
+        </TextBlock>
+        <Label RenderOptions.ClearTypeHint="Enabled" Content="登录遇到问题"  Background="{x:Null}" Foreground="#DD50A8F1" VerticalAlignment="Bottom" HorizontalAlignment="Center"/>
+    </Grid>
+</UserControl>

@@ -1,0 +1,188 @@
+﻿<Window x:Class="DefectDetector.Views.LoginWindow"
+        xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
+        xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+        xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
+        xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
+        xmlns:local="clr-namespace:DefectDetector.Views"
+        xmlns:materialDesign ="http://materialdesigninxaml.net/winfx/xaml/themes"
+        xmlns:prism="http://prismlibrary.com/"
+        mc:Ignorable="d"
+        prism:ViewModelLocator.AutoWireViewModel="True"
+        Title="LoginWindow" Height="450" Width="800" WindowStyle="None" WindowStartupLocation="CenterScreen"
+        ResizeMode="NoResize" Background="Transparent" AllowsTransparency="True"
+        MouseMove="WindowMove">
+    <Window.Resources>
+        <!--欢迎动画-->
+        <Storyboard x:Key="textup">
+            <DoubleAnimationUsingKeyFrames Storyboard.TargetProperty="(UIElement.RenderTransform).(TransformGroup.Children)[0].(TranslateTransform.Y)" Storyboard.TargetName="textBlock1">
+                <EasingDoubleKeyFrame KeyTime="0:0:0.3" Value="0"/>
+                <EasingDoubleKeyFrame KeyTime="0:0:1" Value="-100">
+                    <EasingDoubleKeyFrame.EasingFunction>
+                        <BackEase EasingMode="EaseIn" Amplitude="0.5"/>
+                    </EasingDoubleKeyFrame.EasingFunction>
+                </EasingDoubleKeyFrame>
+            </DoubleAnimationUsingKeyFrames>
+            <DoubleAnimationUsingKeyFrames Storyboard.TargetProperty="(UIElement.RenderTransform).(TransformGroup.Children)[0].(TranslateTransform.Y)" Storyboard.TargetName="textBlock2">
+                <EasingDoubleKeyFrame KeyTime="0:0:0.3" Value="0"/>
+                <EasingDoubleKeyFrame KeyTime="0:0:1" Value="-100">
+                    <EasingDoubleKeyFrame.EasingFunction>
+                        <BackEase EasingMode="EaseIn" Amplitude="0.5"/>
+                    </EasingDoubleKeyFrame.EasingFunction>
+                </EasingDoubleKeyFrame>
+            </DoubleAnimationUsingKeyFrames>
+        </Storyboard>
+        <!--左侧Grid鼠标移入渐变动画-->
+        <Storyboard x:Key="LBbcChange"/>
+        <!--左侧Grid鼠标移出恢复动画-->
+        <Storyboard x:Key="LBbcChangeBack"/>
+        <!--关闭键旋转动画-->
+        <Storyboard x:Key="ExitButton">
+            <DoubleAnimation Duration="0:0:0.3" Storyboard.TargetName="rotateTransform" Storyboard.TargetProperty="Angle" To="90"/>
+        </Storyboard>
+        <!--关闭键恢复动画-->
+        <Storyboard x:Key="ExitButtonBack">
+            <DoubleAnimation Duration="0:0:0.3" Storyboard.TargetName="rotateTransform" Storyboard.TargetProperty="Angle" To="0"/>
+        </Storyboard>
+        <!--最小化按钮缩小动画-->
+        <Storyboard x:Key="MinsizeButton">
+            <DoubleAnimationUsingKeyFrames Storyboard.TargetProperty="(UIElement.RenderTransform).(TransformGroup.Children)[3].(TranslateTransform.X)" Storyboard.TargetName="button">
+                <EasingDoubleKeyFrame KeyTime="0:0:0.3" Value="-3"/>
+            </DoubleAnimationUsingKeyFrames>
+            <DoubleAnimationUsingKeyFrames Storyboard.TargetProperty="(UIElement.RenderTransform).(TransformGroup.Children)[3].(TranslateTransform.Y)" Storyboard.TargetName="button">
+                <EasingDoubleKeyFrame KeyTime="0:0:0.3" Value="5"/>
+            </DoubleAnimationUsingKeyFrames>
+        </Storyboard>
+        <!--最小化按钮恢复动画-->
+        <Storyboard x:Key="MinsizeButtonBack">
+            <DoubleAnimationUsingKeyFrames Storyboard.TargetProperty="(UIElement.RenderTransform).(TransformGroup.Children)[3].(TranslateTransform.X)" Storyboard.TargetName="button">
+                <EasingDoubleKeyFrame KeyTime="0:0:0.3" Value="0"/>
+            </DoubleAnimationUsingKeyFrames>
+            <DoubleAnimationUsingKeyFrames Storyboard.TargetProperty="(UIElement.RenderTransform).(TransformGroup.Children)[3].(TranslateTransform.Y)" Storyboard.TargetName="button">
+                <EasingDoubleKeyFrame KeyTime="0:0:0.3" Value="0"/>
+            </DoubleAnimationUsingKeyFrames>
+        </Storyboard>
+        <!--窗体关闭动画-->
+        <Storyboard x:Key="WindowHide">
+            <ThicknessAnimationUsingKeyFrames Storyboard.TargetProperty="(FrameworkElement.Margin)" >
+                <EasingThicknessKeyFrame KeyTime="0:0:0.4" Value="800,0,-800,0"/>
+            </ThicknessAnimationUsingKeyFrames>
+        </Storyboard>
+
+    </Window.Resources>
+    <Window.Triggers>
+        <!--窗体加载时启动动画-->
+        <EventTrigger RoutedEvent="FrameworkElement.Loaded">
+            <BeginStoryboard Storyboard="{StaticResource textup}"/>
+        </EventTrigger>
+    </Window.Triggers>
+    <Grid x:Name="grid" Background="{x:Null}">
+        <!--在登录成功窗体关闭时触发WindowHide动画-->
+        <Grid.Style>
+            <Style>
+                <Style.Triggers>
+                    <DataTrigger Binding="{Binding IsLogin}" Value="true">
+                        <DataTrigger.EnterActions>
+                            <BeginStoryboard Storyboard="{StaticResource WindowHide}"/>
+                        </DataTrigger.EnterActions>
+                    </DataTrigger>
+                </Style.Triggers>
+            </Style>
+        </Grid.Style>
+        <Grid.ColumnDefinitions>
+            <ColumnDefinition Width="300"/>
+            <ColumnDefinition/>
+        </Grid.ColumnDefinitions>
+        <Grid Grid.Column="0" >
+            <Grid.Triggers>
+                <EventTrigger RoutedEvent="MouseEnter">
+                    <BeginStoryboard Storyboard="{StaticResource LBbcChange}"/>
+                </EventTrigger>
+                <EventTrigger RoutedEvent="MouseLeave">
+                    <BeginStoryboard Storyboard="{StaticResource LBbcChangeBack}"/>
+                </EventTrigger>
+
+            </Grid.Triggers>
+            <Grid.Background>
+                <LinearGradientBrush EndPoint="0.5,1" StartPoint="0.5,0">
+                    <GradientStop Color="#FF546E7A" Offset="0.3"/>
+                    <GradientStop Color="#FF00E676" Offset="1"/>
+                </LinearGradientBrush>
+            </Grid.Background>
+
+            <TextBlock HorizontalAlignment="Left" Height="60.513" Margin="10,152.237,0,0"  Text="预制棒缺陷检测系统" Foreground="White" FontSize="29" VerticalAlignment="Top" Width="268" FontFamily="/UCP;component/Resourses/#STXihei" d:IsLocked="True"/>
+            <TextBlock HorizontalAlignment="Left" Height="32" Margin="10,120.237,0,0" TextWrapping="Wrap" Text="DefectDetector" FontSize="20" Foreground="White" VerticalAlignment="Top" Width="225" d:IsLocked="True"/>
+            <Button
+            Style="{StaticResource MaterialDesignRaisedDarkButton}"
+            Width="100"
+            Height="35"
+            materialDesign:ButtonAssist.CornerRadius="15"
+            FontSize="10" Margin="100,250,100,150" BorderBrush="{x:Null}" d:IsLocked="True" >
+                <DockPanel d:IsLocked="True">
+                    <materialDesign:PackIcon DockPanel.Dock="Left" Kind="ArrowRightBoldCircleOutline" />
+                    <TextBlock Margin="2" Text="了解更多"/>
+                </DockPanel>
+            </Button>
+        </Grid>
+        <Grid Grid.Column="1" Background="{StaticResource MaterialDesignDarkBackground}" ClipToBounds="True">
+            <MediaElement Panel.ZIndex="0" Source=".\Resources\loginBackground.mp4" Margin="-187,-144,-120,-147" MediaEnded="MediaElement_MediaEnded" LoadedBehavior="Manual" Loaded="MediaElement_Loaded"/>
+            <Rectangle Panel.ZIndex="1" Fill="Black" Opacity="0.7"/>
+            <Button Panel.ZIndex="2" x:Name="button" Style="{StaticResource MaterialDesignFloatingActionMiniDarkButton}" Width="30" Height="30" Background="{x:Null}" BorderBrush="{x:Null}"  Margin="418.6,10,45,403.6" FontSize="14" RenderTransformOrigin="0.5,0.5" Click="MinsizeWindow" Cursor="Hand">
+                <Button.RenderTransform>
+                    <TransformGroup>
+                        <ScaleTransform/>
+                        <SkewTransform/>
+                        <RotateTransform/>
+                        <TranslateTransform/>
+                    </TransformGroup>
+                </Button.RenderTransform>
+                <Button.Triggers>
+                    <EventTrigger RoutedEvent="MouseEnter">
+                        <BeginStoryboard Storyboard="{StaticResource MinsizeButton}"/>
+                    </EventTrigger>
+                    <EventTrigger RoutedEvent="MouseLeave">
+                        <BeginStoryboard Storyboard="{StaticResource MinsizeButtonBack}"/>
+                    </EventTrigger>
+                </Button.Triggers>
+                <materialDesign:PackIcon x:Name="packIcon" Foreground="White" HorizontalAlignment="Center" Width="30" Height="30" Kind="Minus" RenderTransformOrigin="0.5,0.5" >
+                    <materialDesign:PackIcon.RenderTransform>
+                        <TransformGroup>
+                            <ScaleTransform/>
+                            <SkewTransform/>
+                            <RotateTransform/>
+                            <TranslateTransform/>
+                        </TransformGroup>
+                    </materialDesign:PackIcon.RenderTransform>
+                </materialDesign:PackIcon>
+            </Button>
+            <Button Panel.ZIndex="2" Style="{StaticResource MaterialDesignFloatingActionMiniDarkButton}" Width="30" Height="30"  Background="{x:Null}" BorderBrush="{x:Null}"  Margin="453.6,10,10,403.6" Click="CloseButton">
+                <Button.Triggers>
+                    <EventTrigger RoutedEvent="MouseEnter">
+                        <BeginStoryboard Storyboard="{StaticResource ExitButton}"/>
+                    </EventTrigger>
+                    <EventTrigger RoutedEvent="MouseLeave">
+                        <BeginStoryboard Storyboard="{StaticResource ExitButtonBack}"/>
+                    </EventTrigger>
+                </Button.Triggers>
+                <Button.RenderTransform>
+                    <RotateTransform x:Name="rotateTransform"  CenterX="15" CenterY="15" Angle="0"/>
+                </Button.RenderTransform>
+                <materialDesign:PackIcon x:Name="colorTransform" Foreground="White" Width="30" Height="30" Kind="Close" HorizontalAlignment="Center" VerticalAlignment="Center" />
+            </Button>
+            <TextBlock Panel.ZIndex="2" x:Name="textBlock1" Height="30" HorizontalAlignment="Center" Text="Please login" FontFamily="Microsoft Sans Serif" FontSize="20" Margin="188,156.8,190.526,256.8" Foreground="{StaticResource PrimaryHueLightForegroundBrush}">
+                <TextBlock.RenderTransform>
+                    <TransformGroup>
+                        <TranslateTransform/>
+                    </TransformGroup>
+                </TextBlock.RenderTransform>
+            </TextBlock>
+            <TextBlock Panel.ZIndex="2" x:Name="textBlock2" Height="60" HorizontalAlignment="Center" Text="登录" FontSize="40" FontFamily="Microsoft YaHei UI Light" Foreground="{StaticResource PrimaryHueLightForegroundBrush}">
+                <TextBlock.RenderTransform>
+                    <TransformGroup>
+                        <TranslateTransform/>
+                    </TransformGroup>
+                </TextBlock.RenderTransform>
+            </TextBlock>
+            <ContentControl Panel.ZIndex="2" Margin="0,170,0,50" Width="300" HorizontalAlignment="Center" prism:RegionManager.RegionName="InputRegion"/>
+        </Grid>
+    </Grid>
+</Window>
