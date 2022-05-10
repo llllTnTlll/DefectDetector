@@ -1,4 +1,5 @@
-﻿using DefectDetector.ViewModels.components;
+﻿using DefectDetector.ViewModels;
+using DefectDetector.ViewModels.components;
 using DefectDetector.ViewModels.mainViews;
 using DefectDetector.Views;
 using DefectDetector.Views.mainViews;
@@ -29,7 +30,7 @@ namespace DefectDetector
             base.ConfigureViewModelLocator();
             ViewModelLocationProvider.Register("LoginInputRegion", typeof(LoginInputRegionViewModel));
             ViewModelLocationProvider.Register("MenuList", typeof(MenuListViewModel));
-            ViewModelLocationProvider.Register("ChartView", typeof(ChartViewModel));
+            ViewModelLocationProvider.Register("ChartView", typeof(MainWindowViewModel));
             ViewModelLocationProvider.Register("SettingViewModel", typeof(SettingViewModel));
         }
     }

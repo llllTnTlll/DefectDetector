@@ -16,8 +16,6 @@ namespace DefectDetector.Helper
         private readonly string _IpAddress;
         private readonly int _port;
 
-        public ResultPkg Result { get; set; }
-
         public SocketHelper(string ip_address, int port)
         {
             // 初始化端口设置
@@ -40,7 +38,7 @@ namespace DefectDetector.Helper
             return clientSocket;
         }
 
-        public ResultPkg RecvPkg(Socket clientSocket, CommandPkg cmdPkg)
+        public static ResultPkg RecvPkg(Socket clientSocket, CommandPkg cmdPkg)
         {
             // 发送命令包
             var options = new JsonSerializerOptions { WriteIndented = true };
@@ -57,12 +55,12 @@ namespace DefectDetector.Helper
             int recv_length = int.Parse(Encoding.UTF8.GetString(byte_length));
             byte[] pkg = GetPack(clientSocket, recv_length);
             string recv_string = Encoding.UTF8.GetString(pkg);
-            Result = JsonSerializer.Deserialize<ResultPkg>(recv_string);
+            ResultPkg Result = JsonSerializer.Deserialize<ResultPkg>(recv_string);
             return Result;
 
         }
 
-        private byte[] GetPack(Socket sock, int count)
+        private static byte[] GetPack(Socket sock, int count)
         {
             byte[] pack = new byte[count];
             int offset = 0;

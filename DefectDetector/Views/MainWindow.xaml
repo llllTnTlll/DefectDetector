@@ -27,10 +27,10 @@
         <!--底部状态栏闪烁动画-->
         <Storyboard x:Key="StatusBarFlashes">
             <ColorAnimationUsingKeyFrames Storyboard.TargetProperty="(Border.Background).Color">
-                <DiscreteColorKeyFrame Value="Gray" KeyTime="0:0:0.2"/>
+                <DiscreteColorKeyFrame Value="#1e1e1e" KeyTime="0:0:0.2"/>
                 <DiscreteColorKeyFrame Value="Transparent" KeyTime="0:0:0.4"/>
-                <DiscreteColorKeyFrame Value="Gray" KeyTime="0:0:0.5"/>
-                <DiscreteColorKeyFrame Value="Transparent" KeyTime="0:0:0.7"/>
+                <DiscreteColorKeyFrame Value="#1e1e1e" KeyTime="0:0:0.6"/>
+                <DiscreteColorKeyFrame Value="Transparent" KeyTime="0:0:0.8"/>
             </ColorAnimationUsingKeyFrames>
         </Storyboard>
     </Window.Resources>
