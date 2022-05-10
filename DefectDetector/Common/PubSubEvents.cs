@@ -6,7 +6,7 @@ using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
 
-namespace DefectDetector.Helper
+namespace DefectDetector.Common
 {
     public class LoginEvent : PubSubEvent<string> { }
 

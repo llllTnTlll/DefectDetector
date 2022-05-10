@@ -21,6 +21,9 @@
             <!--ACCENT-->
             <SolidColorBrush x:Key="SecondaryAccentBrush" Color="#00E676"/>
             <SolidColorBrush x:Key="SecondaryAccentForegroundBrush" Color="#2D2C2C"/>
+
+            <SolidColorBrush x:Key="BottomWarningBrush" Color="#FFAC8113"/>
+            <SolidColorBrush x:Key="BottomErrorBrush" Color="#861b2d"/>
         </ResourceDictionary>
     </Application.Resources>
 </prism:PrismApplication>

@@ -1,4 +1,5 @@
-﻿using DefectDetector.Helper;
+﻿using DefectDetector.Common;
+using DefectDetector.Helper;
 using DefectDetector.Views;
 using DefectDetector.Views.components;
 using Prism.Events;

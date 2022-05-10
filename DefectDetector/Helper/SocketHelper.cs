@@ -1,4 +1,5 @@
-﻿using DefectDetector.Model;
+﻿using DefectDetector.Common;
+using DefectDetector.Model;
 using System;
 using System.Collections.Generic;
 using System.Linq;
@@ -31,10 +32,10 @@ namespace DefectDetector.Helper
             {
                 clientSocket.Connect(new IPEndPoint(IPAddress.Parse(_IpAddress), _port));
             }
-            catch (Exception ex)
+            catch (Exception)
             {
                 clientSocket.Close();
-                throw new Exception("套接字连接异常", ex);
+                throw new SocketConnectException("尝试连接到Python服务失败");
             }
             return clientSocket;
         }

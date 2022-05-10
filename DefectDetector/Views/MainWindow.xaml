@@ -3,11 +3,13 @@
         xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
         xmlns:prism="http://prismlibrary.com/"
         xmlns:materialDesign="http://materialdesigninxaml.net/winfx/xaml/themes"
+        xmlns:helper="clr-namespace:DefectDetector.Helper"
         prism:ViewModelLocator.AutoWireViewModel="True"
         Height="700" Width="1300" WindowStartupLocation="CenterScreen" 
         Background="Transparent" AllowsTransparency="True"  WindowStyle="None" 
         BorderThickness="1" BorderBrush="Black">
     <Window.Resources>
+        <helper:BottomColor2BoolConverter x:Key="BottomColor2BoolConverter"/>
         <!--主窗体打开动画-->
         <Storyboard x:Key="ShowMainWindow">
             <ThicknessAnimationUsingKeyFrames Storyboard.TargetProperty="(FrameworkElement.Margin)" Storyboard.TargetName="grid">
@@ -21,6 +23,15 @@
                 <EasingThicknessKeyFrame KeyTime="0" Value="0"/>
                 <EasingThicknessKeyFrame KeyTime="0:0:0.4" Value="-1300,0,1300,0"/>
             </ThicknessAnimationUsingKeyFrames>
+        </Storyboard>
+        <!--底部状态栏闪烁动画-->
+        <Storyboard x:Key="StatusBarFlashes">
+            <ColorAnimationUsingKeyFrames Storyboard.TargetProperty="(Border.Background).Color">
+                <DiscreteColorKeyFrame Value="Gray" KeyTime="0:0:0.2"/>
+                <DiscreteColorKeyFrame Value="Transparent" KeyTime="0:0:0.4"/>
+                <DiscreteColorKeyFrame Value="Gray" KeyTime="0:0:0.5"/>
+                <DiscreteColorKeyFrame Value="Transparent" KeyTime="0:0:0.7"/>
+            </ColorAnimationUsingKeyFrames>
         </Storyboard>
     </Window.Resources>
     <Window.Triggers>
@@ -53,19 +64,35 @@
             <ContentControl Grid.Column="0" prism:RegionManager.RegionName="LeftListRegion" Margin="1, 2"/>
             <ContentControl Grid.Column="1" prism:RegionManager.RegionName="MainRegion"/>
         </Grid>
+        <!--底部状态栏-->
         <Grid Grid.Row="2" Height="30" 
-              Background="#861b2d">
-            <StackPanel Width="auto" Margin="10,0"
-                        HorizontalAlignment="Right"
-                        Orientation="Horizontal">
-                <materialDesign:PackIcon Kind="LanConnect" Foreground="White"
+              Background="{Binding BottomColor}">
+            <Border x:Name="bottomBorder" Background="Transparent">
+                <Border.Style>
+                    <Style>
+                        <Style.Triggers>
+                            <DataTrigger Binding="{Binding BottomColor, Converter={StaticResource BottomColor2BoolConverter}}" Value="True">
+                                <DataTrigger.EnterActions>
+                                    <BeginStoryboard Storyboard="{StaticResource StatusBarFlashes}"/>
+                                </DataTrigger.EnterActions>
+                            </DataTrigger>
+                        </Style.Triggers>
+                    </Style>
+                </Border.Style>
+                <StackPanel Width="auto" Margin="10,0"
+                            HorizontalAlignment="Right"
+                            Orientation="Horizontal">
+                    <materialDesign:PackIcon Kind="{Binding StatusIcon}" Foreground="White"
                                          VerticalAlignment="Center"
-                                         Height="20" Width="20"/>
-                <TextBlock Text="  连接至检测服务"
+                                         Height="20" Width="20"
+                                         Panel.ZIndex="2"/>
+                    <TextBlock Text="{Binding StatusPrompt}"
                            FontSize="10"
                            Foreground="White"
-                           VerticalAlignment="Center"/>
-            </StackPanel>
+                           VerticalAlignment="Center"
+                           Panel.ZIndex="2"/>
+                </StackPanel>
+            </Border>
         </Grid>
     </Grid>
 </Window>
