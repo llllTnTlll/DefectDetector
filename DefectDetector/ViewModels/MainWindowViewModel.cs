@@ -4,6 +4,7 @@ using DefectDetector.Model;
 using DefectDetector.Views.components;
 using DefectDetector.Views.mainViews;
 using Prism.Commands;
+using Prism.Events;
 using Prism.Mvvm;
 using Prism.Regions;
 using System;
@@ -155,12 +156,23 @@ namespace DefectDetector.ViewModels
             get { return _detectionBtnText; }
             set { SetProperty(ref _detectionBtnText, value); }
         }
+
+        // 被选中瑕疵Box
+        private BoxItem _selectedBoxItem;
+        public BoxItem SelectedBoxItem
+        {
+            get { return _selectedBoxItem; }
+            set { SetProperty(ref _selectedBoxItem, value); }
+        }
+
         // 检测按钮绑定命令
         public DelegateCommand StartDetectionCommand { get; private set; }
         #endregion
 
-        public MainWindowViewModel(IRegionManager regionManager)
+        private readonly IEventAggregator _eventAggregator;
+        public MainWindowViewModel(IRegionManager regionManager, IEventAggregator eventAggregator)
         {
+            _eventAggregator = eventAggregator;
             // 初始化状态参数
             IsConnected = false;
             IsDetecting = false;
@@ -197,12 +209,27 @@ namespace DefectDetector.ViewModels
             Task connectionTask = new Task(Connect2PyServ);
             connectionTask.Start();
 
+            #region ChartView
+
             // 订阅Result更新事件
             // 在Result更新时刷新图表控件
             ResultChanged += RefreshChart;
 
             // 初始化Command
             StartDetectionCommand = new DelegateCommand(StartDetection);
+            ReviseResultCommand = new DelegateCommand(ReviseResult);
+
+            // 订阅Box选中事件
+            // 在选中时更新SelectedBoxItem
+            eventAggregator.GetEvent<BoxSelectedEvent>().Subscribe((BoxItem item) =>
+            {
+                SelectedBoxItem = item;
+            });
+            #endregion
+        }
+        private void ReviseResult()
+        {
+            Boxes[SelectedBoxItem.Index] = SelectedBoxItem;
         }
 
         /// <summary>
@@ -218,7 +245,13 @@ namespace DefectDetector.ViewModels
                 double xmin = finalbox[1];
                 double ymax = finalbox[2];
                 double xmax = finalbox[3];
-                boxes.Add(CoordTransfer.Transformer(xmin, ymin, xmax, ymax, Result.Final_class_ids[index]));
+                BoxItem item = CoordTransfer.Transformer(xmin, ymin, xmax, ymax, Result.Final_class_ids[index]);
+                item.Index = index;
+                item.BoxClickCommand = new DelegateCommand(() =>
+                {
+                    _eventAggregator.GetEvent<BoxSelectedEvent>().Publish(item);
+                });
+                boxes.Add(item);
                 index += 1;
             }
             //处理输入的数据

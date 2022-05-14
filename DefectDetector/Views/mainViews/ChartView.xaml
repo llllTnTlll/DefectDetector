@@ -52,11 +52,12 @@
                                                                 BorderBrush="{x:Null}" BorderThickness="2" 
                                                                 Canvas.Left="{Binding Left, Converter={StaticResource WideConverter}, ConverterParameter={x:Static local:ChartView.Board_Width}}"
                                                                 Canvas.Top="{Binding Top, Converter={StaticResource HeightConverter}, ConverterParameter={x:Static local:ChartView.Board_Height}}">
-                                                            <Rectangle Width="{Binding Width, Converter={StaticResource WideConverter}, ConverterParameter={x:Static local:ChartView.Board_Width}}" 
-                                                                Height="{Binding Height, Converter={StaticResource HeightConverter}, ConverterParameter={x:Static local:ChartView.Board_Height}}" 
-                                                                Fill="{Binding ClsColor}"
-                                                                Opacity="0.5">
-                                                            </Rectangle>
+                                                            <Button Width="{Binding Width, Converter={StaticResource WideConverter}, ConverterParameter={x:Static local:ChartView.Board_Width}}" 
+                                                                    Height="{Binding Height, Converter={StaticResource HeightConverter}, ConverterParameter={x:Static local:ChartView.Board_Height}}" 
+                                                                    Background="{Binding ClsColor}"
+                                                                    Command="{Binding BoxClickCommand}">
+                                                              
+                                                            </Button>
                                                         </Border>
                                                     </Canvas>
                                                     <DataTemplate.Triggers>
@@ -121,35 +122,136 @@
             </materialDesign:Card>
             <!--检测结果修改控件Card-->
             <materialDesign:Card Grid.Column="1"
-                                 Margin="10"
+                                 Margin="0,10,10,10"
                                  Background="{StaticResource PrimaryHueMidBrush}"
                                  materialDesign:ShadowAssist.ShadowDepth="Depth1">
-                <!--<ListView ItemsSource="{Binding Result}">
-                    <ListView.View>
-                        <GridView>
-                            <GridViewColumn DisplayMemberBinding="{Binding Final_class_ids}">
-                                <GridViewColumn.Header>
-                                    <GridViewColumnHeader Content="瑕疵颜色" 
-                                                          Height="40" Padding="0"
-                                                          HorizontalContentAlignment="Center"
-                                                          FontSize="10"
-                                                          />
-                                </GridViewColumn.Header>
-                            </GridViewColumn>
-                            <GridViewColumn DisplayMemberBinding="{Binding Final_class_ids}">
-                                <GridViewColumn.Header>
-                                    <GridViewColumnHeader Content="瑕疵名称" 
-                                                          Height="40" Padding="0"
-                                                          HorizontalContentAlignment="Center"
-                                                          FontSize="10"
-                                                          />
-                                </GridViewColumn.Header>
-                            </GridViewColumn>
-                        </GridView>
-                    </ListView.View>
-                </ListView>-->
+                <Grid>
+                    <Grid.RowDefinitions>
+                        <RowDefinition Height="50"/>
+                        <RowDefinition/>
+                    </Grid.RowDefinitions>
+                    <TextBlock Text="瑕疵详情" Foreground="White" FontSize="15" VerticalAlignment="Center" Margin="10,0"/>
+                    <Grid Grid.Row="1">
+                        <Grid.ColumnDefinitions>
+                            <ColumnDefinition Width="1*"/>
+                            <ColumnDefinition Width="2*"/>
+                        </Grid.ColumnDefinitions>
+                        <!--瑕疵详情左侧基础信息栏-->
+                        <Grid Grid.Column="0">
+                            <Grid.RowDefinitions>
+                                <RowDefinition/>
+                                <RowDefinition/>
+                                <RowDefinition/>
+                                <RowDefinition/>
+                                <RowDefinition/>
+                                <RowDefinition/>
+                            </Grid.RowDefinitions>
+                            <!--瑕疵种类-->
+                            <Grid Grid.Row="0" Margin="20,0,0,0">
+                                <Grid.ColumnDefinitions>
+                                    <ColumnDefinition Width="2*"/>
+                                    <ColumnDefinition/>
+                                </Grid.ColumnDefinitions>
+                                <TextBlock Text="种类 (Class)" Foreground="{StaticResource PrimaryHueMidForegroundBrush}"
+                                           VerticalAlignment="Center"/>
+                                <TextBox Style="{StaticResource MaterialDesignOutlinedTextBox}"
+                                         VerticalAlignment="Center"
+                                         Grid.Column="1"
+                                         Margin="10,0"
+                                         Padding="5"
+                                         BorderBrush="{StaticResource PrimaryHueMidForegroundBrush}"
+                                         materialDesign:HintAssist.Hint="(pixels)"
+                                         materialDesign:HintAssist.Foreground="{StaticResource PrimaryHueMidForegroundBrush}"
+                                         Foreground="{DynamicResource SecondaryAccentBrush}"
+                                         IsEnabled="{Binding CanReviseBtnClick}"
+                                         Text="{Binding SelectedBoxItem.ClsName, Mode=OneWay}" Cursor="Arrow"/>
+                            </Grid>
+                            <!--宽度-->
+                            <Grid Grid.Row="1" Margin="20,0,0,0">
+                                <Grid.ColumnDefinitions>
+                                    <ColumnDefinition Width="2*"/>
+                                    <ColumnDefinition/>
+                                </Grid.ColumnDefinitions>
+                                <TextBlock Text="宽度 (Width)" Foreground="{StaticResource PrimaryHueMidForegroundBrush}"
+                                           VerticalAlignment="Center"/>
+                                <TextBox Style="{StaticResource MaterialDesignOutlinedTextBox}"
+                                         VerticalAlignment="Center"
+                                         Grid.Column="1"
+                                         Margin="10,0"
+                                         Padding="5"
+                                         BorderBrush="{StaticResource PrimaryHueMidForegroundBrush}"
+                                         materialDesign:HintAssist.Hint="(pixels)"
+                                         materialDesign:HintAssist.Foreground="{StaticResource PrimaryHueMidForegroundBrush}"
+                                         Foreground="{DynamicResource SecondaryAccentBrush}"
+                                         IsEnabled="{Binding CanReviseBtnClick}"
+                                         Text="{Binding SelectedBoxItem.Width}"/>
+                            </Grid>
+                            <!--高度-->
+                            <Grid Grid.Row="2" Margin="20,0,0,0">
+                                <Grid.ColumnDefinitions>
+                                    <ColumnDefinition Width="2*"/>
+                                    <ColumnDefinition/>
+                                </Grid.ColumnDefinitions>
+                                <TextBlock Text="高度 (Height)" Foreground="{StaticResource PrimaryHueMidForegroundBrush}"
+                                           VerticalAlignment="Center"/>
+                                <TextBox Style="{StaticResource MaterialDesignOutlinedTextBox}"
+                                         VerticalAlignment="Center"
+                                         Grid.Column="1"
+                                         Margin="10,0"
+                                         Padding="5"
+                                         BorderBrush="{StaticResource PrimaryHueMidForegroundBrush}"
+                                         materialDesign:HintAssist.Hint="(pixels)"
+                                         materialDesign:HintAssist.Foreground="{StaticResource PrimaryHueMidForegroundBrush}"
+                                         Foreground="{DynamicResource SecondaryAccentBrush}"
+                                         IsEnabled="{Binding CanReviseBtnClick}"
+                                         Text="{Binding SelectedBoxItem.Height}"/>
+                            </Grid>
+                            <!--左边距-->
+                            <Grid Grid.Row="3" Margin="20,0,0,0">
+                                <Grid.ColumnDefinitions>
+                                    <ColumnDefinition Width="2*"/>
+                                    <ColumnDefinition/>
+                                </Grid.ColumnDefinitions>
+                                <TextBlock Text="左边距 (LeftPadding)" Foreground="{StaticResource PrimaryHueMidForegroundBrush}"
+                                           VerticalAlignment="Center"/>
+                                <TextBox Style="{StaticResource MaterialDesignOutlinedTextBox}"
+                                         VerticalAlignment="Center"
+                                         Grid.Column="1"
+                                         Margin="10,0"
+                                         Padding="5"
+                                         BorderBrush="{StaticResource PrimaryHueMidForegroundBrush}"
+                                         materialDesign:HintAssist.Hint="(pixels)"
+                                         materialDesign:HintAssist.Foreground="{StaticResource PrimaryHueMidForegroundBrush}"
+                                         Foreground="{DynamicResource SecondaryAccentBrush}"
+                                         IsEnabled="{Binding CanReviseBtnClick}"
+                                         Text="{Binding SelectedBoxItem.Left}"/>
+                            </Grid>
+                            <!--顶边距-->
+                            <Grid Grid.Row="4" Margin="20,0,0,0">
+                                <Grid.ColumnDefinitions>
+                                    <ColumnDefinition Width="2*"/>
+                                    <ColumnDefinition/>
+                                </Grid.ColumnDefinitions>
+                                <TextBlock Text="顶边距 (Height)" Foreground="{StaticResource PrimaryHueMidForegroundBrush}"
+                                           VerticalAlignment="Center"/>
+                                <TextBox Style="{StaticResource MaterialDesignOutlinedTextBox}"
+                                         VerticalAlignment="Center"
+                                         Grid.Column="1"
+                                         Margin="10,0"
+                                         Padding="5"
+                                         BorderBrush="{StaticResource PrimaryHueMidForegroundBrush}"
+                                         materialDesign:HintAssist.Hint="(pixels)"
+                                         materialDesign:HintAssist.Foreground="{StaticResource PrimaryHueMidForegroundBrush}"
+                                         Foreground="{DynamicResource SecondaryAccentBrush}"
+                                         IsEnabled="{Binding CanReviseBtnClick}"
+                                         Text="{Binding SelectedBoxItem.Top}" Cursor="Arrow"/>
+                            </Grid>
+                        </Grid>
+                        <!--右侧瑕疵统计图表-->
+                        
+                    </Grid>
+                </Grid>
             </materialDesign:Card>
-
         </Grid>
     </Grid>
 </UserControl>
