@@ -23,6 +23,7 @@ namespace DefectDetector
         {
             containerRegistry.RegisterForNavigation<ChartView>("ChartView");
             containerRegistry.RegisterForNavigation<SettingView>("SettingView");
+            containerRegistry.RegisterForNavigation<ScreenSaver>("ScreenSaver");
         }
 
         protected override void ConfigureViewModelLocator()
@@ -31,7 +32,7 @@ namespace DefectDetector
             ViewModelLocationProvider.Register("LoginInputRegion", typeof(LoginInputRegionViewModel));
             ViewModelLocationProvider.Register("MenuList", typeof(MenuListViewModel));
             ViewModelLocationProvider.Register("ChartView", typeof(MainWindowViewModel));
-            ViewModelLocationProvider.Register("SettingViewModel", typeof(SettingViewModel));
+            ViewModelLocationProvider.Register("ScreenSaver", typeof(ScreenSaverViewModel));
         }
     }
 }

@@ -13,64 +13,143 @@
     <UserControl.Resources>
         <helper:WidthValueConverter x:Key="WideConverter"/>
         <helper:HeightValueConverter x:Key="HeightConverter"/>
+        <helper:Id2NameConverter x:Key="Id2NameConverter"/>
     </UserControl.Resources>
     <Grid>
-        <materialDesign:Card Height="300" Width="500" Margin="20,20,720,293"
-                             Background="{StaticResource PrimaryHueMidBrush}"
-                             materialDesign:ShadowAssist.ShadowDepth="Depth1">
-            <Grid>
-                <Grid.ColumnDefinitions>
-                    <ColumnDefinition Width="300"/>
-                    <ColumnDefinition/>
-                </Grid.ColumnDefinitions>
-                <Grid Grid.Column="0">
-                    <Grid Background="{StaticResource PrimaryHueMidBrush}">
-                        <!--瑕疵显示控件-->
-                        <Grid Margin="10" x:Name="ChartGrid">
-                            <Border BorderBrush="#FF4A4A4A" BorderThickness="2">
-                                <Grid>
-                                    <ItemsControl x:Name="chart_board" 
-                                                  ItemsSource="{Binding Boxes}"
-                                                  Background="{StaticResource PrimaryHueDarkBrush}">
-                                        <ItemsControl.ItemTemplate>
-                                            <DataTemplate>
-                                                <Canvas>
-                                                    <Rectangle Width="{Binding Width, Converter={StaticResource WideConverter}, ConverterParameter={x:Static local:ChartView.Board_Width}}" 
-                                                               Height="{Binding Height, Converter={StaticResource HeightConverter}, ConverterParameter={x:Static local:ChartView.Board_Height}}" 
-                                                               Canvas.Left="{Binding Left, Converter={StaticResource WideConverter}, ConverterParameter={x:Static local:ChartView.Board_Width}}"
-                                                               Canvas.Top="{Binding Top, Converter={StaticResource HeightConverter}, ConverterParameter={x:Static local:ChartView.Board_Height}}"
-                                                               Fill="{Binding ClsColor}"
-                                                               Opacity="0.5">
-                                                    </Rectangle>
-                                                </Canvas>
-                                            </DataTemplate>
-                                        </ItemsControl.ItemTemplate>
-                                    </ItemsControl>
-                                </Grid>
-                            </Border>
+        <Grid.RowDefinitions>
+            <RowDefinition/>
+            <RowDefinition/>
+        </Grid.RowDefinitions>
+        <Grid Grid.Row="0">
+            <Grid.ColumnDefinitions>
+                <ColumnDefinition Width="500"/>
+                <ColumnDefinition/>
+            </Grid.ColumnDefinitions>
+            <!--瑕疵box显示控件Card-->
+            <materialDesign:Card 
+                                 Margin="10"
+                                 Grid.Column="0"
+                                 Background="{StaticResource PrimaryHueMidBrush}"
+                                 materialDesign:ShadowAssist.ShadowDepth="Depth1">
+                <Grid>
+                    <Grid.ColumnDefinitions>
+                        <ColumnDefinition Width="300"/>
+                        <ColumnDefinition/>
+                    </Grid.ColumnDefinitions>
+                    <Grid Grid.Column="0">
+                        <Grid Background="{StaticResource PrimaryHueMidBrush}">
+                            <!--瑕疵显示控件-->
+                            <Grid Margin="10" x:Name="ChartGrid">
+                                <Border BorderBrush="#FF4A4A4A" BorderThickness="2">
+                                    <Grid>
+                                        <ItemsControl x:Name="chart_board" 
+                                                      ItemsSource="{Binding Boxes}"
+                                                      Background="{StaticResource PrimaryHueDarkBrush}">
+                                            <ItemsControl.ItemTemplate>
+                                                <DataTemplate>
+                                                    <Canvas>
+                                                        <Border x:Name="boxborder"
+                                                                BorderBrush="{x:Null}" BorderThickness="2" 
+                                                                Canvas.Left="{Binding Left, Converter={StaticResource WideConverter}, ConverterParameter={x:Static local:ChartView.Board_Width}}"
+                                                                Canvas.Top="{Binding Top, Converter={StaticResource HeightConverter}, ConverterParameter={x:Static local:ChartView.Board_Height}}">
+                                                            <Rectangle Width="{Binding Width, Converter={StaticResource WideConverter}, ConverterParameter={x:Static local:ChartView.Board_Width}}" 
+                                                                Height="{Binding Height, Converter={StaticResource HeightConverter}, ConverterParameter={x:Static local:ChartView.Board_Height}}" 
+                                                                Fill="{Binding ClsColor}"
+                                                                Opacity="0.5">
+                                                            </Rectangle>
+                                                        </Border>
+                                                    </Canvas>
+                                                    <DataTemplate.Triggers>
+                                                        <Trigger Property="IsMouseOver" Value="True">
+                                                            <Setter TargetName="boxborder" Property="BorderBrush" Value="{StaticResource SecondaryAccentBrush}"/>
+                                                        </Trigger>
+                                                    </DataTemplate.Triggers>
+                                                </DataTemplate>
+                                            </ItemsControl.ItemTemplate>
+                                        </ItemsControl>
+                                    </Grid>
+                                </Border>
+                            </Grid>
                         </Grid>
                     </Grid>
-                </Grid>
-                <StackPanel Orientation="Vertical" Grid.Column="1">
-                    <!--开始检测按钮-->
-                    <Button Width="150" Margin="10"
+                    <Grid Grid.Column="1">
+                        <Grid.RowDefinitions>
+                            <RowDefinition/>
+                            <RowDefinition/>
+                        </Grid.RowDefinitions>
+                        <!--图例显示控件-->
+                        <Grid>
+                            <ListBox Margin="10,10,10,0" 
+                                     materialDesign:ListBoxItemAssist.ShowSelection="False"
+                                 ItemsSource="{Binding ClsBrushes}">
+                                <ListBox.ItemTemplate>
+                                    <DataTemplate>
+                                        <StackPanel Orientation="Horizontal">
+                                            <Border BorderThickness="5" BorderBrush="{Binding Path=Value, Mode=OneWay}"/>
+                                            <TextBlock Foreground="White"
+                                                   Margin="10, 0"
+                                                   Text="{Binding Path=Key, Converter={StaticResource Id2NameConverter}}"/>
+                                        </StackPanel>
+                                    </DataTemplate>
+                                </ListBox.ItemTemplate>
+                            </ListBox>
+                        </Grid>
+                        <!--控制面板-->
+                        <StackPanel Orientation="Vertical" Grid.Row="1" Margin="0,0,0,10">
+                            <!--开始检测按钮-->
+                            <Button  Margin="10"
                             Background="{StaticResource SecondaryAccentBrush}"
-                            IsEnabled="{Binding IsConnected}"
-                            Command="{Binding StartDetectionCommand}" Cursor="Hand">
-                        <TextBlock Text="开始检测" 
+                            Command="{Binding StartDetectionCommand}" Cursor="Hand"
+                            IsEnabled="{Binding CanDetectBtnClick}">
+                                <TextBlock Text="{Binding DetectionBtnText}" 
                                    FontSize="12"
                                    Foreground="{StaticResource SecondaryAccentForegroundBrush}" 
                                    FontFamily="Microsoft YaHei UI"/>
-                    </Button>
-                    <!--插入按钮-->
-                    <Button Width="150" Background="{DynamicResource MaterialDesignDarkBackground}" Cursor="Hand">
-                        <TextBlock Text="结果修改" 
+                            </Button>
+                            <!--插入按钮-->
+                            <Button Margin="10" Background="{DynamicResource MaterialDesignDarkBackground}" Cursor="Hand"
+                            IsEnabled="{Binding CanReviseBtnClick}"
+                            Command="{Binding ReviseResultCommand}">
+                                <TextBlock Text="结果修改" 
                                    FontSize="12"
                                    Foreground="White" 
                                    FontFamily="Microsoft YaHei UI"/>
-                    </Button>
-                </StackPanel>
-            </Grid>
-        </materialDesign:Card>
+                            </Button>
+                        </StackPanel>
+                    </Grid>
+                </Grid>
+            </materialDesign:Card>
+            <!--检测结果修改控件Card-->
+            <materialDesign:Card Grid.Column="1"
+                                 Margin="10"
+                                 Background="{StaticResource PrimaryHueMidBrush}"
+                                 materialDesign:ShadowAssist.ShadowDepth="Depth1">
+                <!--<ListView ItemsSource="{Binding Result}">
+                    <ListView.View>
+                        <GridView>
+                            <GridViewColumn DisplayMemberBinding="{Binding Final_class_ids}">
+                                <GridViewColumn.Header>
+                                    <GridViewColumnHeader Content="瑕疵颜色" 
+                                                          Height="40" Padding="0"
+                                                          HorizontalContentAlignment="Center"
+                                                          FontSize="10"
+                                                          />
+                                </GridViewColumn.Header>
+                            </GridViewColumn>
+                            <GridViewColumn DisplayMemberBinding="{Binding Final_class_ids}">
+                                <GridViewColumn.Header>
+                                    <GridViewColumnHeader Content="瑕疵名称" 
+                                                          Height="40" Padding="0"
+                                                          HorizontalContentAlignment="Center"
+                                                          FontSize="10"
+                                                          />
+                                </GridViewColumn.Header>
+                            </GridViewColumn>
+                        </GridView>
+                    </ListView.View>
+                </ListView>-->
+            </materialDesign:Card>
+
+        </Grid>
     </Grid>
 </UserControl>

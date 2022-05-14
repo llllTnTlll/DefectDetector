@@ -1,4 +1,5 @@
 ﻿using DefectDetector.Model;
+using DefectDetector.ViewModels;
 using System;
 using System.Collections.Generic;
 using System.Globalization;
@@ -61,4 +62,19 @@ namespace DefectDetector.Helper
             throw new NotImplementedException();
         }
     }
+
+    public class Id2NameConverter : IValueConverter
+    {
+        public object Convert(object value, Type targetType, object parameter, CultureInfo culture)
+        {
+            int id = (int)value;
+            return MainWindowViewModel.ClsNames[id];
+        }
+
+        public object ConvertBack(object value, Type targetType, object parameter, CultureInfo culture)
+        {
+            throw new NotImplementedException();
+        }
+    }
+
 }

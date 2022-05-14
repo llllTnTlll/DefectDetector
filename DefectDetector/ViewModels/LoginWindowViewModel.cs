@@ -52,6 +52,9 @@ namespace DefectDetector.ViewModels
                 var mainWindow = _container.Resolve<MainWindow>();
                 Application.Current.MainWindow = mainWindow;
                 loginWindow.Close();
+
+                RegionManager.SetRegionManager(mainWindow, _regionManager);
+                RegionManager.UpdateRegions();
                 mainWindow.Show();
             }));
 

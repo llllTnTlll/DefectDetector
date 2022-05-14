@@ -10,7 +10,6 @@
              mc:Ignorable="d" 
              d:DesignHeight="450" d:DesignWidth="50">
     <UserControl.Resources>
-
         <Style x:Key="MenuListItemStyle" TargetType="ListBoxItem">
             <Setter Property="MinHeight" Value="50"/>
             <Setter Property="Template">
@@ -37,6 +36,7 @@
             </Setter>
         </Style>
     </UserControl.Resources>
+    
     <StackPanel Orientation="Vertical" Background="{StaticResource PrimaryHueMidBrush}">
         <ListBox x:Name="menuList" ItemsSource="{Binding MenuList}" ItemContainerStyle="{StaticResource MenuListItemStyle}">
             <i:Interaction.Triggers>

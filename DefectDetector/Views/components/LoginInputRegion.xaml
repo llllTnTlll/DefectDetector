@@ -33,13 +33,15 @@
     <Grid x:Name="grid">
         <TextBox 
             materialDesign:HintAssist.Hint="UserName" 
+            materialDesign:HintAssist.Foreground="White"
+            materialDesign:TextFieldAssist.UnderlineBrush="White"
             Style="{StaticResource MaterialDesignFloatingHintTextBox}" 
             Foreground="White"
             BorderBrush="White"
             Width="250"
             Margin="25,10,25,0"
             VerticalAlignment="Top" 
-            Text="{Binding InputName, Mode=TwoWay,UpdateSourceTrigger=PropertyChanged}"/>
+            Text="{Binding InputName, Mode=TwoWay,UpdateSourceTrigger=PropertyChanged}" Cursor="Arrow"/>
         <PasswordBox x:Name="FloatingPasswordBox"
                      Foreground="White"
                      BorderBrush="White"
@@ -51,7 +53,7 @@
                      Margin="25,70,25,0"
                      VerticalAlignment="Top"
                      helper:BindedPasswordHelper.IsPasswordBindingEnabled="True" 
-                     helper:BindedPasswordHelper.BindedPassword="{Binding InputPassword,Mode=TwoWay,UpdateSourceTrigger=PropertyChanged}"
+                     helper:BindedPasswordHelper.BindedPassword="{Binding InputPassword,Mode=TwoWay,UpdateSourceTrigger=PropertyChanged}" Cursor="Arrow"
                      />
         <Button Background="{StaticResource SecondaryAccentBrush}" BorderBrush="{x:Null}" VerticalAlignment="Bottom" Margin="25,0,25,45" Command="{Binding LoginCommand}" Cursor="Hand">
             <StackPanel Orientation="Horizontal" >

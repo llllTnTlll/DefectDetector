@@ -15,7 +15,7 @@ namespace DefectDetector.ViewModels.components
 {
     public class MenuListViewModel: BindableBase
     {
-        private IRegionManager _regionManager;
+        private readonly IRegionManager _regionManager;
         public MenuListViewModel(IRegionManager regionManager)
         {
             _regionManager = regionManager;

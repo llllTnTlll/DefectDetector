@@ -12,10 +12,10 @@
             </ResourceDictionary.MergedDictionaries>
 
             <!--PRIMARY-->
-            <SolidColorBrush x:Key="PrimaryHueLightBrush" Color="#B1CDDB"/>
-            <SolidColorBrush x:Key="PrimaryHueLightForegroundBrush" Color="#FFFFFFFF"/>
+            <SolidColorBrush x:Key="PrimaryHueLightBrush" Color="#FF92CFED"/>
+            <SolidColorBrush x:Key="PrimaryHueLightForegroundBrush" Color="White"/>
             <SolidColorBrush x:Key="PrimaryHueMidBrush" Color="#1e1e1e"/>
-            <SolidColorBrush x:Key="PrimaryHueMidForegroundBrush" Color="#FFFFFF"/>
+            <SolidColorBrush x:Key="PrimaryHueMidForegroundBrush" Color="#FFDADADA"/>
             <SolidColorBrush x:Key="PrimaryHueDarkBrush" Color="#111111"/>
             <SolidColorBrush x:Key="PrimaryHueDarkForegroundBrush" Color="#FFFFFF"/>
             <!--ACCENT-->

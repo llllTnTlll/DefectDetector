@@ -4,9 +4,121 @@
              xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006" 
              xmlns:d="http://schemas.microsoft.com/expression/blend/2008" 
              xmlns:local="clr-namespace:DefectDetector.Views.mainViews"
+             xmlns:materialDesign="http://materialdesigninxaml.net/winfx/xaml/themes"
              mc:Ignorable="d" 
-             d:DesignHeight="450" d:DesignWidth="800">
+             d:DesignHeight="613" d:DesignWidth="1240">
     <Grid>
-        <TextBlock Text="SettingView" HorizontalAlignment="Center" VerticalAlignment="Center" Foreground="White"/>
+        <ScrollViewer VerticalScrollBarVisibility="Visible">
+            <StackPanel>
+                <materialDesign:Card Margin="20" Height="300"
+                             materialDesign:ShadowAssist.ShadowDepth="Depth1"
+                             Background="{StaticResource PrimaryHueMidBrush}">
+                    <Grid>
+                        <Grid.RowDefinitions>
+                            <RowDefinition Height="50"/>
+                            <RowDefinition/>
+                        </Grid.RowDefinitions>
+                        <TextBlock Text="检测设置" 
+                           Foreground="White" 
+                           FontSize="20"
+                           Margin="20, 0"
+                           VerticalAlignment="Center" 
+                           FontFamily="Microsoft YaHei UI Light"/>
+                        <Grid Grid.Row="1" Margin="20,0,20,20">
+                            <Grid.RowDefinitions>
+                                <RowDefinition/>
+                                <RowDefinition/>
+                                <RowDefinition/>
+                                <RowDefinition/>
+                                <RowDefinition/>
+                            </Grid.RowDefinitions>
+                            <Grid Grid.Row="0">
+                                <Grid.ColumnDefinitions>
+                                    <ColumnDefinition Width="300"/>
+                                    <ColumnDefinition/>
+                                </Grid.ColumnDefinitions>
+                                <TextBlock Text="检测后自动存入数据库" 
+                                           VerticalAlignment="Center"
+                                           Foreground="{StaticResource PrimaryHueMidForegroundBrush}"
+                                           FontSize="12"/>
+                                <StackPanel Grid.Column="1" Orientation="Horizontal">
+                                    <ToggleButton Grid.Column="1" IsChecked="False" Background="{StaticResource PrimaryHueLightBrush}"/>
+                                    <TextBlock Text="关"
+                                               Margin="15,0"
+                                               Foreground="{StaticResource PrimaryHueMidForegroundBrush}"
+                                               VerticalAlignment="Center"/>
+                                </StackPanel>
+                            </Grid>
+                            <Grid Grid.Row="1">
+                                <Grid.ColumnDefinitions>
+                                    <ColumnDefinition Width="300"/>
+                                    <ColumnDefinition/>
+                                </Grid.ColumnDefinitions>
+                                <TextBlock Text="瑕疵图表网格线显示" 
+                                           VerticalAlignment="Center"
+                                           Foreground="{StaticResource PrimaryHueMidForegroundBrush}"
+                                           FontSize="12"/>
+                                <StackPanel Grid.Column="1" Orientation="Horizontal">
+                                    <ToggleButton Grid.Column="1" IsChecked="False" Background="{StaticResource PrimaryHueLightBrush}"/>
+                                    <TextBlock Text="关"
+                                               Margin="15"
+                                               Foreground="{StaticResource PrimaryHueMidForegroundBrush}"
+                                               VerticalAlignment="Center"/>
+                                </StackPanel>
+                            </Grid>
+                        </Grid>
+                    </Grid>
+                </materialDesign:Card>
+                <materialDesign:Card Margin="20" Height="200"
+                             materialDesign:ShadowAssist.ShadowDepth="Depth1"
+                             Background="{StaticResource PrimaryHueMidBrush}">
+                    <Grid>
+                        <Grid.RowDefinitions>
+                            <RowDefinition Height="50"/>
+                            <RowDefinition/>
+                        </Grid.RowDefinitions>
+                        <TextBlock Text="视图" 
+                           Foreground="White" 
+                           FontSize="20"
+                           Margin="20, 0"
+                           VerticalAlignment="Center" 
+                           FontFamily="Microsoft YaHei UI Light"/>
+                    </Grid>
+                </materialDesign:Card>
+                <materialDesign:Card Margin="20" Height="200"
+                             materialDesign:ShadowAssist.ShadowDepth="Depth1"
+                             Background="{StaticResource PrimaryHueMidBrush}">
+                    <Grid>
+                        <Grid.RowDefinitions>
+                            <RowDefinition Height="50"/>
+                            <RowDefinition/>
+                        </Grid.RowDefinitions>
+                        <TextBlock Text="检测设置" 
+                           Foreground="White" 
+                           FontSize="20"
+                           Margin="20, 0"
+                           VerticalAlignment="Center" 
+                           FontFamily="Microsoft YaHei UI Light"/>
+                    </Grid>
+                </materialDesign:Card>
+                <materialDesign:Card Margin="20" Height="200"
+                             materialDesign:ShadowAssist.ShadowDepth="Depth1"
+                             Background="{StaticResource PrimaryHueMidBrush}">
+                    <Grid>
+                        <Grid.RowDefinitions>
+                            <RowDefinition Height="50"/>
+                            <RowDefinition/>
+                        </Grid.RowDefinitions>
+                        <TextBlock Text="检测设置" 
+                           Foreground="White" 
+                           FontSize="20"
+                           Margin="20, 0"
+                           VerticalAlignment="Center" 
+                           FontFamily="Microsoft YaHei UI Light"/>
+                    </Grid>
+                </materialDesign:Card>
+            </StackPanel>
+        </ScrollViewer>
+
     </Grid>
 </UserControl>

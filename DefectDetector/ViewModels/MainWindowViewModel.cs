@@ -2,6 +2,7 @@
 using DefectDetector.Helper;
 using DefectDetector.Model;
 using DefectDetector.Views.components;
+using DefectDetector.Views.mainViews;
 using Prism.Commands;
 using Prism.Mvvm;
 using Prism.Regions;
@@ -18,22 +19,50 @@ namespace DefectDetector.ViewModels
     {
         private readonly IRegionManager _regionManager;
 
-        // 瑕疵图表画笔
-        public static Dictionary<int, Brush> ClsBrushes;
-        // 瑕疵Id对应表
-        public static Dictionary<int, string> ClsNames;
-
-        // 图表数据源
-        public ObservableCollection<BoxItem> Boxes { get; set; }
-
+        #region 全局状态指示
         // 指示是否正确连接到服务
-        // 此属性同样控制关键按钮的可用性
         private bool _isConnected;
         public bool IsConnected
         {
             get { return _isConnected; }
-            set { SetProperty(ref _isConnected, value); }
+            set
+            {
+                _isConnected = value;
+                RaisePropertyChanged(nameof(IsConnected));
+                if(IsConnected && !IsDetecting)
+                {
+                    CanDetectBtnClick = true;
+                }
+                else CanDetectBtnClick = false;
+            }
         }
+
+        // 是否正在检测
+        private bool _isDetecting;
+        public bool IsDetecting
+        {
+            get { return _isDetecting; }
+            set
+            {
+                _isDetecting = value;
+                RaisePropertyChanged(nameof(IsDetecting));
+                if (IsConnected && !IsDetecting)
+                {
+                    CanDetectBtnClick = true;
+                }
+                else CanDetectBtnClick = false;
+            }
+        }
+        #endregion
+
+        #region 主窗体
+        // 瑕疵图表画笔
+        public static Dictionary<int, Brush> ClsBrushes { get; set; }
+        // 瑕疵Id对应表
+        public static Dictionary<int, string> ClsNames { get; set; }
+
+        // 图表数据源
+        public ObservableCollection<BoxItem> Boxes { get; set; }
 
         // 底部状态栏颜色属性
         private SolidColorBrush bottomColor;
@@ -75,12 +104,15 @@ namespace DefectDetector.ViewModels
             {
                 if (_result == value) return;
                 _result = value;
+                CanReviseBtnClick = true;
                 RaisePropertyChanged(nameof(Result));
                 OnResultChanged();
 
             }
         }
+        #endregion
 
+        #region ChartView
         // 图表刷新事件
         public delegate void ResultChangedEventHandler();
         public event ResultChangedEventHandler ResultChanged;
@@ -88,19 +120,59 @@ namespace DefectDetector.ViewModels
         {
             if (ResultChanged != null)
             {
+                CanReviseBtnClick = true;
                 ResultChanged.Invoke();
             }
         }
 
-        // 开始检测按钮绑定命令
+        // 修改结果按钮可用性
+        private bool _canReviseBtnClick;
+        public bool CanReviseBtnClick
+        {
+            get { return _canReviseBtnClick; }
+            set { SetProperty(ref _canReviseBtnClick, value); }
+        }
+
+        // 修改结果按钮绑定命令
+        public DelegateCommand ReviseResultCommand { get; private set; }
+
+        // 检测按钮可用性
+        private bool _canDetectBtnClick;
+        public bool CanDetectBtnClick
+        {
+            get { return _canDetectBtnClick; }
+            set
+            {
+                _canDetectBtnClick = value;
+                RaisePropertyChanged();
+            }
+        }
+
+        // 检测按钮绑定文本
+        private string _detectionBtnText;
+        public string DetectionBtnText
+        {
+            get { return _detectionBtnText; }
+            set { SetProperty(ref _detectionBtnText, value); }
+        }
+        // 检测按钮绑定命令
         public DelegateCommand StartDetectionCommand { get; private set; }
+        #endregion
 
         public MainWindowViewModel(IRegionManager regionManager)
         {
+            // 初始化状态参数
+            IsConnected = false;
+            IsDetecting = false;
+            CanDetectBtnClick = false;
+            CanReviseBtnClick = false;
+            DetectionBtnText = "开始检测";
+
+            // 初始化瑕疵图表画笔及Id对应表
             Boxes = new ObservableCollection<BoxItem>();
             ClsBrushes = new Dictionary<int, Brush>();
             ClsNames = new Dictionary<int, string>();
-            // 初始化瑕疵图表画笔及Id对应表
+
             ClsBrushes.Add(0, new SolidColorBrush(Color.FromRgb(255, 255, 255)));
             ClsBrushes.Add(1, new SolidColorBrush(Color.FromRgb(179, 238, 58)));
             ClsBrushes.Add(2, new SolidColorBrush(Color.FromRgb(255, 215, 0)));
@@ -117,9 +189,9 @@ namespace DefectDetector.ViewModels
             //为各Region分配初始内容
             _regionManager = regionManager;
             _regionManager.RegisterViewWithRegion("LeftListRegion", typeof(MenuList));
+            _regionManager.RegisterViewWithRegion("MainRegion", typeof(ScreenSaver));
 
             // 启动连接服务
-            IsConnected = false;
             StatusPrompt = "   正在连接至检测服务";
             StatusIcon = "HumanGreetingProximity";
             Task connectionTask = new Task(Connect2PyServ);
@@ -149,7 +221,6 @@ namespace DefectDetector.ViewModels
                 boxes.Add(CoordTransfer.Transformer(xmin, ymin, xmax, ymax, Result.Final_class_ids[index]));
                 index += 1;
             }
-            Console.WriteLine(boxes.Count);
             //处理输入的数据
             App.Current.Dispatcher.BeginInvoke((Action)delegate ()
             {
@@ -168,13 +239,18 @@ namespace DefectDetector.ViewModels
         {
             if (IsConnected && ClientSocket!=null)
             {
+                IsDetecting = true;
+                CanReviseBtnClick = false;
+
+                DetectionBtnText = "正在检测";
                 //获取预测包
                 CommandPkg commandPkg = new CommandPkg()
                 {
                     Command = "predict",
                     Params = ""
                 };
-                Task recv_task = Task.Run(() => this.Result = SocketHelper.RecvPkg(ClientSocket, commandPkg));
+                Task recv_task = Task.Run(() => this.Result = SocketHelper.RecvPkg(ClientSocket, commandPkg))
+                    .ContinueWith(t => { IsDetecting = false; DetectionBtnText = "开始检测"; });
             }
         }
 
