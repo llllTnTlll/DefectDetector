@@ -1,0 +1,50 @@
+﻿<UserControl x:Class="DefectDetector.Views.components.SaveReminder"
+             xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
+             xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+             xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006" 
+             xmlns:d="http://schemas.microsoft.com/expression/blend/2008" 
+             xmlns:prism="http://prismlibrary.com/"
+             xmlns:local="clr-namespace:DefectDetector.Views.components"
+             mc:Ignorable="d" >
+    <prism:Dialog.WindowStyle>
+        <Style TargetType="Window">
+            <Setter Property="prism:Dialog.WindowStartupLocation" Value="CenterOwner" />
+            <Setter Property="ShowInTaskbar" Value="False"/>
+            <Setter Property="SizeToContent" Value="WidthAndHeight"/>
+            <Setter Property="WindowStyle" Value="None"/>
+            <Setter Property="AllowsTransparency" Value="True"/>
+        </Style>
+    </prism:Dialog.WindowStyle>
+    <Grid Background="{StaticResource PrimaryHueMidBrush}" Height="170" Width="300">
+        <Grid.RowDefinitions>
+            <RowDefinition Height="5"/>
+            <RowDefinition Height="3*"/>
+            <RowDefinition/>
+        </Grid.RowDefinitions>
+        <Border Background="{StaticResource SecondaryAccentBrush}"/>
+        <Grid Grid.Row="1">
+            <TextBlock Text="您有未保存的设置，是否进行保存？"
+                       Margin="0,60,0,0"
+                       HorizontalAlignment="Center"
+                       Foreground="{StaticResource PrimaryHueLightForegroundBrush}"/>
+        </Grid>
+        <Grid Grid.Row="2">
+            <Grid.ColumnDefinitions>
+                <ColumnDefinition/>
+                <ColumnDefinition/>
+            </Grid.ColumnDefinitions>
+            <Button Grid.Column="0" Margin="50,0,20,0" 
+                    Height="25"
+                    Background="{DynamicResource SecondaryAccentForegroundBrush}"
+                    Command="{Binding CancelCommand}">
+                <TextBlock Text="否" Foreground="White"/>
+            </Button>
+            <Button Grid.Column="1" Margin="20,0,50,0" 
+                    Height="25"
+                    Background="{StaticResource SecondaryAccentBrush}"
+                    Command="{Binding ConfirmCommand}">
+                <TextBlock Text="是" Foreground="Black"/>
+            </Button>
+        </Grid>
+    </Grid>
+</UserControl>

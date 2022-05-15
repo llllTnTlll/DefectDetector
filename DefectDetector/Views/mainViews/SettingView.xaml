@@ -42,7 +42,7 @@
                                            Foreground="{StaticResource PrimaryHueMidForegroundBrush}"
                                            FontSize="12"/>
                                 <StackPanel Grid.Column="1" Orientation="Horizontal">
-                                    <ToggleButton Grid.Column="1" IsChecked="False" Background="{StaticResource PrimaryHueLightBrush}"/>
+                                    <ToggleButton Grid.Column="1" IsChecked="{Binding AppSettings.ResultAutoSave}" Background="{DynamicResource SecondaryAccentBrush}"/>
                                     <TextBlock Text="关"
                                                Margin="15,0"
                                                Foreground="{StaticResource PrimaryHueMidForegroundBrush}"
@@ -59,7 +59,7 @@
                                            Foreground="{StaticResource PrimaryHueMidForegroundBrush}"
                                            FontSize="12"/>
                                 <StackPanel Grid.Column="1" Orientation="Horizontal">
-                                    <ToggleButton Grid.Column="1" IsChecked="False" Background="{StaticResource PrimaryHueLightBrush}"/>
+                                    <ToggleButton Grid.Column="1" IsChecked="{Binding AppSettings.ShowChartGrid}" Background="{DynamicResource SecondaryAccentBrush}"/>
                                     <TextBlock Text="关"
                                                Margin="15"
                                                Foreground="{StaticResource PrimaryHueMidForegroundBrush}"
@@ -93,7 +93,7 @@
                             <RowDefinition Height="50"/>
                             <RowDefinition/>
                         </Grid.RowDefinitions>
-                        <TextBlock Text="检测设置" 
+                        <TextBlock Text="隐私" 
                            Foreground="White" 
                            FontSize="20"
                            Margin="20, 0"
@@ -109,7 +109,7 @@
                             <RowDefinition Height="50"/>
                             <RowDefinition/>
                         </Grid.RowDefinitions>
-                        <TextBlock Text="检测设置" 
+                        <TextBlock Text="其他" 
                            Foreground="White" 
                            FontSize="20"
                            Margin="20, 0"

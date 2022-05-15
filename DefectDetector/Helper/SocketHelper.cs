@@ -45,18 +45,25 @@ namespace DefectDetector.Helper
             string jsonString = JsonSerializer.Serialize(cmdPkg, options);
             byte[] command = Encoding.UTF8.GetBytes(jsonString);
 
-            // 先发送数据包长度
-            clientSocket.Send(Encoding.UTF8.GetBytes(command.Length.ToString().PadRight(8)));
-            // 再发送数据包本体
-            clientSocket.Send(command);
+            try
+            {
+                // 先发送数据包长度
+                clientSocket.Send(Encoding.UTF8.GetBytes(command.Length.ToString().PadRight(8)));
+                // 再发送数据包本体
+                clientSocket.Send(command);
 
-            // 接受运行结果
-            byte[] byte_length = GetPack(clientSocket, 8);
-            int recv_length = int.Parse(Encoding.UTF8.GetString(byte_length));
-            byte[] pkg = GetPack(clientSocket, recv_length);
-            string recv_string = Encoding.UTF8.GetString(pkg);
-            ResultPkg Result = JsonSerializer.Deserialize<ResultPkg>(recv_string);
-            return Result;
+                // 接受运行结果
+                byte[] byte_length = GetPack(clientSocket, 8);
+                int recv_length = int.Parse(Encoding.UTF8.GetString(byte_length));
+                byte[] pkg = GetPack(clientSocket, recv_length);
+                string recv_string = Encoding.UTF8.GetString(pkg);
+                ResultPkg Result = JsonSerializer.Deserialize<ResultPkg>(recv_string);
+                return Result;
+            }
+            catch (SocketException)
+            {
+                throw new SocketConnectException("数据包发送/接收过程中发生错误");
+            }
 
         }
 

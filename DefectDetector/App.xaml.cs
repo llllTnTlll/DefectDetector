@@ -2,6 +2,7 @@
 using DefectDetector.ViewModels.components;
 using DefectDetector.ViewModels.mainViews;
 using DefectDetector.Views;
+using DefectDetector.Views.components;
 using DefectDetector.Views.mainViews;
 using Prism.Ioc;
 using Prism.Mvvm;
@@ -24,6 +25,8 @@ namespace DefectDetector
             containerRegistry.RegisterForNavigation<ChartView>("ChartView");
             containerRegistry.RegisterForNavigation<SettingView>("SettingView");
             containerRegistry.RegisterForNavigation<ScreenSaver>("ScreenSaver");
+
+            containerRegistry.RegisterDialog<SaveReminder, SaveReminderViewModel>();
         }
 
         protected override void ConfigureViewModelLocator()

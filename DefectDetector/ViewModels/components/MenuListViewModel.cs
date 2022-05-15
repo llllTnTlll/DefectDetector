@@ -1,4 +1,5 @@
-﻿using DefectDetector.Model;
+﻿using DefectDetector.Common;
+using DefectDetector.Model;
 using DefectDetector.Views.components;
 using Prism.Commands;
 using Prism.Events;
@@ -8,17 +9,24 @@ using System;
 using System.Collections.Generic;
 using System.Collections.ObjectModel;
 using System.Linq;
+using System.Reflection;
 using System.Text;
 using System.Threading.Tasks;
+using System.Windows;
 
 namespace DefectDetector.ViewModels.components
 {
     public class MenuListViewModel: BindableBase
     {
         private readonly IRegionManager _regionManager;
-        public MenuListViewModel(IRegionManager regionManager)
+        private IRegionNavigationJournal _journal;
+        private IEventAggregator _eventAggregator;
+        public MenuListViewModel(IRegionManager regionManager, IRegionNavigationJournal journal, IEventAggregator eventAggregator)
         {
             _regionManager = regionManager;
+            _journal = journal;
+            _eventAggregator = eventAggregator;
+
             NavigateCommand = new DelegateCommand<MenuBar>(Navigate);
             MenuList = new ObservableCollection<MenuBar>();
             MenuList.Add(new MenuBar() { IconName= "ChartAreasplineVariant", IsSelect=false, ViewName="ChartView"});
@@ -34,11 +42,27 @@ namespace DefectDetector.ViewModels.components
             set { _menuList = value; }
         }
 
+        private string lastNavigation;
         private void Navigate(MenuBar obj)
         {
             if (obj == null || string.IsNullOrWhiteSpace(obj.ViewName)) 
                 return;
-            _regionManager.Regions["MainRegion"].RequestNavigate(obj.ViewName);
+
+            // 若检测到离开SettingView
+            // 通知其ViewModel提醒保存
+            if(lastNavigation == "SettingView")
+            {
+               _eventAggregator.GetEvent<SaveReminderEvent>().Publish();
+            }
+
+            _regionManager.RequestNavigate("MainRegion", obj.ViewName, callback);
+            lastNavigation = obj.ViewName;
+
+        }
+
+        private void callback(NavigationResult obj)
+        {
+            _journal = obj.Context.NavigationService.Journal;
         }
 
         public DelegateCommand<MenuBar> NavigateCommand { get; set; }

@@ -15,4 +15,9 @@ namespace DefectDetector.Common
     /// </summary>
     public class BoxSelectedEvent: PubSubEvent<BoxItem> { }
 
+    /// <summary>
+    /// 在MenuBar导航离开SettingView时触发
+    /// </summary>
+    public class SaveReminderEvent: PubSubEvent { }
+
 }
