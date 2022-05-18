@@ -15,12 +15,15 @@ namespace DefectDetector.Model
 {
     public class BoxItem : BindableBase
     {
+        // 瑕疵Box索引
         private int _index;
         public int Index
         {
             get { return _index; }
             set { SetProperty(ref _index, value); }
         }
+
+        // 左边距
         private double _left;
         public double Left
         {
@@ -28,18 +31,23 @@ namespace DefectDetector.Model
             set { SetProperty(ref _left, value); }
         }
 
+        // 顶边距
         private double _top;
         public double Top
         {
             get { return _top; }
             set { SetProperty(ref _top, value); }
         }
+
+        // 高度
         private double _height;
         public double Height
         {
             get { return _height; }
             set { SetProperty(ref _height, value); }
         }
+
+        // 宽度
         private double _width;
         public double Width
         {
@@ -47,6 +55,7 @@ namespace DefectDetector.Model
             set { SetProperty(ref _width, value); }
         }
 
+        // 类别id
         private int clsId;
         public int ClsId
         {

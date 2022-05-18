@@ -282,8 +282,10 @@ namespace DefectDetector.ViewModels
                     Command = "predict",
                     Params = ""
                 };
-                Task recv_task = Task.Run(() => this.Result = SocketHelper.RecvPkg(ClientSocket, commandPkg))
-                    .ContinueWith(t => { IsDetecting = false; DetectionBtnText = "开始检测"; });
+
+                Task recv_task = new Task(()=>DetectionTaskMethod(commandPkg));
+                recv_task.Start();
+                recv_task.ContinueWith(t => { IsDetecting = false; DetectionBtnText = "开始检测"; });
             }
         }
 
@@ -316,6 +318,25 @@ namespace DefectDetector.ViewModels
             }
         }
 
-        
+        /// <summary>
+        /// 开始检测按钮线程任务
+        /// </summary>
+        /// <param name="commandPkg"></param>
+        private void DetectionTaskMethod(CommandPkg commandPkg)
+        {
+            try
+            {
+                this.Result = SocketHelper.RecvPkg(ClientSocket, commandPkg);
+            }
+            catch(SocketConnectException)
+            {
+                // 中断当前Socket连接
+                ClientSocket.Close();
+                // 重试连接
+                Task connectionTask = new Task(Connect2PyServ);
+                connectionTask.Start();
+
+            }
+        }
     }
 }

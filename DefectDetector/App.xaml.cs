@@ -18,13 +18,15 @@ namespace DefectDetector
         protected override Window CreateShell()
         {
             return Container.Resolve<MainWindow>();
-        }
+        }  
 
         protected override void RegisterTypes(IContainerRegistry containerRegistry)
         {
+            containerRegistry.RegisterForNavigation<ScreenSaver>("ScreenSaver");
             containerRegistry.RegisterForNavigation<ChartView>("ChartView");
             containerRegistry.RegisterForNavigation<SettingView>("SettingView");
-            containerRegistry.RegisterForNavigation<ScreenSaver>("ScreenSaver");
+            containerRegistry.RegisterForNavigation<HistoryView>("HistoryView");
+            containerRegistry.RegisterForNavigation<PLCView>("PLCView");
 
             containerRegistry.RegisterDialog<SaveReminder, SaveReminderViewModel>();
         }

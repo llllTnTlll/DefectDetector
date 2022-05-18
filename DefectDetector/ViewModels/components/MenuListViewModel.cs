@@ -30,7 +30,8 @@ namespace DefectDetector.ViewModels.components
             NavigateCommand = new DelegateCommand<MenuBar>(Navigate);
             MenuList = new ObservableCollection<MenuBar>();
             MenuList.Add(new MenuBar() { IconName= "ChartAreasplineVariant", IsSelect=false, ViewName="ChartView"});
-            MenuList.Add(new MenuBar() { IconName = "DesktopClassic", IsSelect = false, ViewName="SettingView"});
+            MenuList.Add(new MenuBar() { IconName = "DesktopClassic", IsSelect = false, ViewName="HistoryView"});
+            MenuList.Add(new MenuBar() { IconName = "VideoInputComponent", IsSelect = false, ViewName = "PLCView" });
             MenuList.Add(new MenuBar() { IconName = "Cog", IsSelect = false, ViewName = "SettingView" });
         }
 
