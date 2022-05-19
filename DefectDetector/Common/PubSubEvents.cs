@@ -23,7 +23,7 @@ namespace DefectDetector.Common
     /// <summary>
     /// 当MenuList选择变化时触发
     /// </summary>
-    public class MenuListSlectionChanged: PubSubEvent { }
+    public class MenuListSlectionChanged: PubSubEvent<string> { }
 
     /// <summary>
     /// 历史信息被选中后触发

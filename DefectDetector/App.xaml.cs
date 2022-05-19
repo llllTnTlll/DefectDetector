@@ -4,6 +4,7 @@ using DefectDetector.ViewModels.mainViews;
 using DefectDetector.Views;
 using DefectDetector.Views.components;
 using DefectDetector.Views.mainViews;
+using DefectDetector.Views.toolBars;
 using Prism.Ioc;
 using Prism.Mvvm;
 using System.Windows;
@@ -24,6 +25,7 @@ namespace DefectDetector
         {
             containerRegistry.RegisterForNavigation<ScreenSaver>("ScreenSaver");
             containerRegistry.RegisterForNavigation<ChartView>("ChartView");
+            containerRegistry.RegisterForNavigation<ChartViewBar>("ChartViewBar");
             containerRegistry.RegisterForNavigation<SettingView>("SettingView");
             containerRegistry.RegisterForNavigation<HistoryView>("HistoryView");
             containerRegistry.RegisterForNavigation<PLCView>("PLCView");
@@ -37,6 +39,7 @@ namespace DefectDetector
             ViewModelLocationProvider.Register("LoginInputRegion", typeof(LoginInputRegionViewModel));
             ViewModelLocationProvider.Register("MenuList", typeof(MenuListViewModel));
             ViewModelLocationProvider.Register("ChartView", typeof(MainWindowViewModel));
+            ViewModelLocationProvider.Register("ChartViewBar", typeof(MainWindowViewModel));
             ViewModelLocationProvider.Register("ScreenSaver", typeof(ScreenSaverViewModel));
         }
     }

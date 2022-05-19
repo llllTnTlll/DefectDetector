@@ -86,10 +86,11 @@
                 <!--ToolBar-->
                 <Border BorderBrush="Black" BorderThickness="2">
                     <StackPanel Margin="0,-50,0,50" 
-                            x:Name="toolBar" 
-                            Grid.Row="0" 
-                            Panel.ZIndex="0"
-                            Background="{StaticResource PrimaryHueMidBrush}">
+                                x:Name="toolBar" 
+                                Grid.Row="0" 
+                                Panel.ZIndex="0"
+                                Orientation="Horizontal"
+                                Background="{StaticResource PrimaryHueMidBrush}">
                         <StackPanel.Style>
                             <Style>
                                 <Style.Triggers>
@@ -109,6 +110,7 @@
                                 </Style.Triggers>
                             </Style>
                         </StackPanel.Style>
+                        <ContentControl prism:RegionManager.RegionName="ToolBarRegion"/>
                     </StackPanel>
                 </Border>
                 <!--MainRegion-->

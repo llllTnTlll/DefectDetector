@@ -74,10 +74,6 @@
                         </Grid>
                     </Grid>
                     <Grid Grid.Column="1">
-                        <Grid.RowDefinitions>
-                            <RowDefinition/>
-                            <RowDefinition/>
-                        </Grid.RowDefinitions>
                         <!--图例显示控件-->
                         <Grid>
                             <ListBox Margin="10,10,10,0" 
@@ -95,28 +91,7 @@
                                 </ListBox.ItemTemplate>
                             </ListBox>
                         </Grid>
-                        <!--控制面板-->
-                        <StackPanel Orientation="Vertical" Grid.Row="1" Margin="0,0,0,10">
-                            <!--开始检测按钮-->
-                            <Button  Margin="10"
-                            Background="{StaticResource SecondaryAccentBrush}"
-                            Command="{Binding StartDetectionCommand}" Cursor="Hand"
-                            IsEnabled="{Binding CanDetectBtnClick}">
-                                <TextBlock Text="{Binding DetectionBtnText}" 
-                                   FontSize="12"
-                                   Foreground="{StaticResource SecondaryAccentForegroundBrush}" 
-                                   FontFamily="Microsoft YaHei UI"/>
-                            </Button>
-                            <!--插入按钮-->
-                            <Button Margin="10" Background="{DynamicResource MaterialDesignDarkBackground}" Cursor="Hand"
-                            IsEnabled="{Binding CanReviseBtnClick}"
-                            Command="{Binding ReviseResultCommand}">
-                                <TextBlock Text="结果修改" 
-                                   FontSize="12"
-                                   Foreground="White" 
-                                   FontFamily="Microsoft YaHei UI"/>
-                            </Button>
-                        </StackPanel>
+                        
                     </Grid>
                 </Grid>
             </materialDesign:Card>

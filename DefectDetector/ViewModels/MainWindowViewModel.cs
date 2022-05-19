@@ -67,6 +67,14 @@ namespace DefectDetector.ViewModels
         // 图表数据源
         public ObservableCollection<BoxItem> Boxes { get; set; }
 
+        // 预制棒信息属性
+        private PreformModel _preformInfo;
+        public PreformModel PreformInfo
+        {
+            get { return _preformInfo; }
+            set { SetProperty(ref _preformInfo, value); }
+        }
+
         // 顶部ToolBar 收起/显示
         private bool _isToolBarShow;
         public bool IsToolBarShow
@@ -221,6 +229,9 @@ namespace DefectDetector.ViewModels
             Task connectionTask = new Task(Connect2PyServ);
             connectionTask.Start();
 
+            // 订阅工具栏刷新事件
+            eventAggregator.GetEvent<MenuListSlectionChanged>().Subscribe(ToolBarRefresh);
+
             #region ChartView
 
             // 订阅Result更新事件
@@ -237,13 +248,16 @@ namespace DefectDetector.ViewModels
             {
                 SelectedBoxItem = item;
             });
-
-            eventAggregator.GetEvent<MenuListSlectionChanged>().Subscribe(ToolBarRefresh);
             #endregion
         }
 
-        private void ToolBarRefresh()
+        /// <summary>
+        /// 刷新ToolBar与MainRegion对应
+        /// </summary>
+        /// <param name="navigateTo"></param>
+        private void ToolBarRefresh(string navigateTo)
         {
+            string barName = navigateTo + "Bar";
             //收起工具栏
             IsToolBarShow = false;
             //使用Timer为动画显示效果延时
@@ -255,7 +269,7 @@ namespace DefectDetector.ViewModels
             {
                 App.Current.Dispatcher.Invoke((Action)(() =>
                 {
-
+                    _regionManager.RequestNavigate("ToolBarRegion", barName);
                 }));
                 IsToolBarShow = true;
             };
@@ -286,6 +300,7 @@ namespace DefectDetector.ViewModels
                 {
                     _eventAggregator.GetEvent<BoxSelectedEvent>().Publish(item);
                 });
+
                 boxes.Add(item);
                 index += 1;
             }
@@ -305,23 +320,43 @@ namespace DefectDetector.ViewModels
         /// </summary>
         private void StartDetection()
         {
-            if (IsConnected && ClientSocket!=null)
+            // 确认连接可用
+            if (IsConnected && ClientSocket == null)
+                return;
+
+            // 若检测到自动保存开启
+            if(PreformInfo!=null && (bool)DetectorSettings.Default["ResultAutoSave"] == true)
             {
-                IsDetecting = true;
-                CanReviseBtnClick = false;
-
-                DetectionBtnText = "正在检测";
-                //获取预测包
-                CommandPkg commandPkg = new CommandPkg()
-                {
-                    Command = "predict",
-                    Params = ""
-                };
-
-                Task recv_task = new Task(()=>DetectionTaskMethod(commandPkg));
-                recv_task.Start();
-                recv_task.ContinueWith(t => { IsDetecting = false; DetectionBtnText = "开始检测"; });
+                // 向预制棒信息表中填充信息
+                string sql = String.Format("INSERT Into PreformInfo(IsMarked, DetectionTime, Operator) VALUES({0},'{1}','{2}')",
+                    Convert.ToInt32(PreformInfo.IsMarked),PreformInfo.DetectionTime,PreformInfo.Operator);
+                SQLhelper.ExecuteNonQuery(sql, 1);
             }
+            IsDetecting = true;
+            CanReviseBtnClick = false;
+            DetectionBtnText = "正在检测";
+            PreformInfo = null;
+
+            //获取预测包
+            CommandPkg commandPkg = new CommandPkg()
+            {
+                Command = "predict",
+                Params = ""
+            };
+
+            Task recv_task = new Task(() => DetectionTaskMethod(commandPkg));
+            recv_task.Start();
+            recv_task.ContinueWith(t =>
+            {
+                IsDetecting = false; 
+                DetectionBtnText = "开始检测";
+                PreformInfo = new PreformModel()
+                {
+                    IsMarked = false,
+                    DetectionTime = DateTime.Now.ToString("G"),
+                    Operator = "致远",
+                };
+            });
         }
 
         /// <summary>

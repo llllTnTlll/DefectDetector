@@ -50,7 +50,7 @@ namespace DefectDetector.ViewModels.components
                 return;
 
             // 发布选择变化事件
-            _eventAggregator.GetEvent<MenuListSlectionChanged>().Publish();
+            _eventAggregator.GetEvent<MenuListSlectionChanged>().Publish(obj.ViewName);
 
             // 若检测到离开SettingView
             // 通知其ViewModel提醒保存
