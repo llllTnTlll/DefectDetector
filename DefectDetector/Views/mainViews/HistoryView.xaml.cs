@@ -1,4 +1,7 @@
-﻿using System;
+﻿using DefectDetector.Common;
+using DefectDetector.Model;
+using Prism.Events;
+using System;
 using System.Collections.Generic;
 using System.Collections.ObjectModel;
 using System.Linq;
@@ -23,8 +26,11 @@ namespace DefectDetector.Views.mainViews
     {
         public static double Board_Width { get; set; }
         public static double Board_Height { get; set; }
-        public HistoryView()
+
+        private readonly IEventAggregator _eventAggregator;
+        public HistoryView(IEventAggregator eventAggregator)
         {
+            _eventAggregator = eventAggregator;
             InitializeComponent();
         }
 
@@ -32,6 +38,15 @@ namespace DefectDetector.Views.mainViews
         {
             Board_Width = chart_board.ActualWidth;
             Board_Height = chart_board.ActualHeight;
+        }
+
+        private void historyListbox_SelectionChanged(object sender, SelectionChangedEventArgs e)
+        {
+            HistoryItemModel selectedItem = historyListbox.SelectedItem as HistoryItemModel;
+            if (selectedItem != null)
+            {
+                _eventAggregator.GetEvent<HistorySelectedEvent>().Publish(selectedItem);
+            }
         }
     }
 }

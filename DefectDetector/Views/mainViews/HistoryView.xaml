@@ -4,6 +4,7 @@
              xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006" 
              xmlns:d="http://schemas.microsoft.com/expression/blend/2008" 
              xmlns:local="clr-namespace:DefectDetector.Views.mainViews"
+             xmlns:helper="clr-namespace:DefectDetector.Helper"
              xmlns:materialDesign="http://materialdesigninxaml.net/winfx/xaml/themes"
              mc:Ignorable="d" 
              d:DesignHeight="613" d:DesignWidth="1240" Loaded="UserControl_Loaded">
@@ -28,6 +29,8 @@
                 </Setter.Value>
             </Setter>
         </Style>
+        <helper:WidthValueConverter x:Key="WideConverter"/>
+        <helper:HeightValueConverter x:Key="HeightConverter"/>
     </UserControl.Resources>
     <Grid>
         <Grid.ColumnDefinitions>
@@ -37,10 +40,12 @@
         <materialDesign:Card Background="Transparent"
                              Margin="10"
                              materialDesign:ShadowAssist.ShadowDepth="Depth1">
-            <ListView ItemsSource="{Binding HistoryItems}" 
-                      materialDesign:ListBoxItemAssist.ShowSelection="False"
-                      ScrollViewer.VerticalScrollBarVisibility="Visible">
-                <ListView.ItemTemplate>
+            <ListBox x:Name="historyListbox" 
+                     ItemsSource="{Binding HistoryItems}" 
+                     materialDesign:ListBoxItemAssist.ShowSelection="False"
+                     ScrollViewer.VerticalScrollBarVisibility="Visible"
+                     SelectionChanged="historyListbox_SelectionChanged">
+                <ListBox.ItemTemplate>
                     <DataTemplate>
                         <materialDesign:Card Background="{StaticResource PrimaryHueMidBrush}" 
                                      materialDesign:ShadowAssist.ShadowDepth="Depth1"
@@ -84,13 +89,13 @@
                             <Trigger Property="IsMouseOver" Value="True">
                                 <Setter TargetName="selectionBoard" Property="Background" Value="{StaticResource SecondaryAccentBrush}"/>
                             </Trigger>
-                            <DataTrigger Binding="{Binding RelativeSource={RelativeSource Mode=FindAncestor, AncestorType={x:Type ListViewItem}}, Path=IsSelected}" Value="True">
+                            <DataTrigger Binding="{Binding RelativeSource={RelativeSource Mode=FindAncestor, AncestorType={x:Type ListBoxItem}}, Path=IsSelected}" Value="True">
                                 <Setter TargetName="selectionBoard" Property="Background" Value="{StaticResource SecondaryAccentBrush}"/>
                             </DataTrigger>
                         </DataTemplate.Triggers>
                     </DataTemplate>
-                </ListView.ItemTemplate>
-            </ListView>
+                </ListBox.ItemTemplate>
+            </ListBox>
         </materialDesign:Card>
         <materialDesign:Card Background="{StaticResource PrimaryHueMidBrush}"
                              Margin="0,10,10,10"
@@ -101,11 +106,11 @@
                     <RowDefinition Height="Auto"/>
                     <RowDefinition/>
                 </Grid.RowDefinitions>
-                <Grid Margin="10" Height="300" Width="300" x:Name="ChartGrid">
+                <Grid Margin="10" Height="200" Width="200" x:Name="ChartGrid">
                     <Border BorderBrush="#FF4A4A4A" BorderThickness="2">
                         <Grid>
                             <ItemsControl x:Name="chart_board" 
-                                          ItemsSource="{Binding Boxes}"
+                                          ItemsSource="{Binding SelectedItem.Boxes}"
                                           Background="{StaticResource PrimaryHueDarkBrush}">
                                 <ItemsControl.ItemTemplate>
                                     <DataTemplate>
