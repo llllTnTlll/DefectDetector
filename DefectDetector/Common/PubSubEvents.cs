@@ -21,6 +21,11 @@ namespace DefectDetector.Common
     public class SaveReminderEvent: PubSubEvent { }
 
     /// <summary>
+    /// 当MenuList选择变化时触发
+    /// </summary>
+    public class MenuListSlectionChanged: PubSubEvent { }
+
+    /// <summary>
     /// 历史信息被选中后触发
     /// </summary>
     public class HistorySelectedEvent:PubSubEvent<HistoryItemModel> { }

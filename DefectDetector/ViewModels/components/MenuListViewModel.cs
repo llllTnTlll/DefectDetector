@@ -49,6 +49,9 @@ namespace DefectDetector.ViewModels.components
             if (obj == null || string.IsNullOrWhiteSpace(obj.ViewName)) 
                 return;
 
+            // 发布选择变化事件
+            _eventAggregator.GetEvent<MenuListSlectionChanged>().Publish();
+
             // 若检测到离开SettingView
             // 通知其ViewModel提醒保存
             if(lastNavigation == "SettingView")

@@ -24,6 +24,20 @@
                 <EasingThicknessKeyFrame KeyTime="0:0:0.4" Value="-1300,0,1300,0"/>
             </ThicknessAnimationUsingKeyFrames>
         </Storyboard>
+        <!--工具栏隐藏动画-->
+        <Storyboard x:Key="HideToolBar" Completed="Hide_Completed" FillBehavior="Stop">
+            <ThicknessAnimationUsingKeyFrames Storyboard.TargetProperty="(FrameworkElement.Margin)">
+                <EasingThicknessKeyFrame KeyTime="0" Value="0,0,0,0"/>
+                <EasingThicknessKeyFrame KeyTime="0:0:0.5" Value="0,-50,0,50"/>
+            </ThicknessAnimationUsingKeyFrames>
+        </Storyboard>
+        <!--工具栏显示动画-->
+        <Storyboard x:Key="ShowToolBar" Completed="Show_Completed" FillBehavior="Stop">
+            <ThicknessAnimationUsingKeyFrames Storyboard.TargetProperty="(FrameworkElement.Margin)">
+                <EasingThicknessKeyFrame KeyTime="0" Value="0,-50,0,50"/>
+                <EasingThicknessKeyFrame KeyTime="0:0:0.5" Value="0,0,0,0"/>
+            </ThicknessAnimationUsingKeyFrames>
+        </Storyboard>
         <!--底部状态栏闪烁动画-->
         <Storyboard x:Key="StatusBarFlashes">
             <ColorAnimationUsingKeyFrames Storyboard.TargetProperty="(Border.Background).Color">
@@ -46,11 +60,13 @@
             <RowDefinition Height="auto"/>
         </Grid.RowDefinitions>
         <materialDesign:ColorZone Background="#1e1e1e"
-                                  Padding="10"
+                                  Padding="10,0"
+                                  Height="50"
+                                  Panel.ZIndex="1"
                                   materialDesign:ShadowAssist.ShadowDepth="Depth3"
                                   ClipToBounds="False">
             <StackPanel Orientation="Horizontal">
-                <ToggleButton Style="{StaticResource MaterialDesignHamburgerToggleButton}"/>
+                <ToggleButton Style="{StaticResource MaterialDesignHamburgerToggleButton}" />
                 <TextBlock VerticalAlignment="Center"
                            Margin="20 0 0 0"
                            Text="Defect Detector" />
@@ -62,7 +78,44 @@
                 <ColumnDefinition/>
             </Grid.ColumnDefinitions>
             <ContentControl Grid.Column="0" prism:RegionManager.RegionName="LeftListRegion" Margin="1, 2"/>
-            <ContentControl Grid.Column="1" prism:RegionManager.RegionName="MainRegion"/>
+            <Grid Grid.Column="1">
+                <Grid.RowDefinitions>
+                    <RowDefinition Height="50"/>
+                    <RowDefinition/>
+                </Grid.RowDefinitions>
+                <!--ToolBar-->
+                <Border BorderBrush="Black" BorderThickness="2">
+                    <StackPanel Margin="0,-50,0,50" 
+                            x:Name="toolBar" 
+                            Grid.Row="0" 
+                            Panel.ZIndex="0"
+                            Background="{StaticResource PrimaryHueMidBrush}">
+                        <StackPanel.Style>
+                            <Style>
+                                <Style.Triggers>
+                                    <!--显示ToolBar动画-->
+                                    <DataTrigger Binding="{Binding IsToolBarShow}" Value="true">
+                                        <DataTrigger.EnterActions>
+                                            <BeginStoryboard Storyboard="{StaticResource ShowToolBar}"/>
+                                        </DataTrigger.EnterActions>
+                                    </DataTrigger>
+                                    <!--隐藏ToolBar动画-->
+                                    <DataTrigger Binding="{Binding IsToolBarShow}" Value="false">
+                                        <DataTrigger.EnterActions>
+                                            <BeginStoryboard Storyboard="{StaticResource HideToolBar}"/>
+                                        </DataTrigger.EnterActions>
+                                    </DataTrigger>
+
+                                </Style.Triggers>
+                            </Style>
+                        </StackPanel.Style>
+                    </StackPanel>
+                </Border>
+                <!--MainRegion-->
+                <Grid Grid.Row="1">
+                    <ContentControl Grid.Column="1" prism:RegionManager.RegionName="MainRegion"/>
+                </Grid>
+            </Grid>
         </Grid>
         <!--底部状态栏-->
         <Grid Grid.Row="2" Height="30" 

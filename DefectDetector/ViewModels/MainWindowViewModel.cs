@@ -12,6 +12,7 @@ using System.Collections.Generic;
 using System.Collections.ObjectModel;
 using System.Net.Sockets;
 using System.Threading.Tasks;
+using System.Timers;
 using System.Windows.Media;
 
 namespace DefectDetector.ViewModels
@@ -59,11 +60,20 @@ namespace DefectDetector.ViewModels
         #region 主窗体
         // 瑕疵图表画笔
         public static Dictionary<int, Brush> ClsBrushes { get; set; }
+
         // 瑕疵Id对应表
         public static Dictionary<int, string> ClsNames { get; set; }
 
         // 图表数据源
         public ObservableCollection<BoxItem> Boxes { get; set; }
+
+        // 顶部ToolBar 收起/显示
+        private bool _isToolBarShow;
+        public bool IsToolBarShow
+        {
+            get { return _isToolBarShow; }
+            set { SetProperty(ref _isToolBarShow, value); }
+        }
 
         // 底部状态栏颜色属性
         private SolidColorBrush bottomColor;
@@ -176,9 +186,11 @@ namespace DefectDetector.ViewModels
             // 初始化状态参数
             IsConnected = false;
             IsDetecting = false;
+            IsToolBarShow = true;
             CanDetectBtnClick = false;
             CanReviseBtnClick = false;
             DetectionBtnText = "开始检测";
+
 
             // 初始化瑕疵图表画笔及Id对应表
             Boxes = new ObservableCollection<BoxItem>();
@@ -225,8 +237,31 @@ namespace DefectDetector.ViewModels
             {
                 SelectedBoxItem = item;
             });
+
+            eventAggregator.GetEvent<MenuListSlectionChanged>().Subscribe(ToolBarRefresh);
             #endregion
         }
+
+        private void ToolBarRefresh()
+        {
+            //收起工具栏
+            IsToolBarShow = false;
+            //使用Timer为动画显示效果延时
+            //刷新工具栏
+            Timer timer = new Timer();
+            timer.AutoReset = false;
+            timer.Interval = 500;
+            timer.Elapsed += (object sender, ElapsedEventArgs e) =>
+            {
+                App.Current.Dispatcher.Invoke((Action)(() =>
+                {
+
+                }));
+                IsToolBarShow = true;
+            };
+            timer.Enabled = true;
+        }
+
         private void ReviseResult()
         {
             Boxes[SelectedBoxItem.Index] = SelectedBoxItem;
