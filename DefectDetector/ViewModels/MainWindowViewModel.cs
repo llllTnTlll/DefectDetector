@@ -328,9 +328,17 @@ namespace DefectDetector.ViewModels
             if(PreformInfo!=null && (bool)DetectorSettings.Default["ResultAutoSave"] == true)
             {
                 // 向预制棒信息表中填充信息
-                string sql = String.Format("INSERT Into PreformInfo(IsMarked, DetectionTime, Operator) VALUES({0},'{1}','{2}')",
+                string sql1 = String.Format("INSERT Into PreformInfo(IsMarked, DetectionTime, Operator) output inserted.PreformId VALUES({0},'{1}','{2}')",
                     Convert.ToInt32(PreformInfo.IsMarked),PreformInfo.DetectionTime,PreformInfo.Operator);
-                SQLhelper.ExecuteNonQuery(sql, 1);
+                int preformId = (int)SQLhelper.ExecuteScalar(sql1, 1);
+
+                // 向瑕疵信息表中填充信息
+                foreach(BoxItem box in Boxes)
+                {
+                    string sql2 = String.Format("INSERT Into DefectInfo(PreformId, DefectId, BoxLeft, BoxTop, BoxWidth, BoxHeight) VALUES({0},{1},{2},{3},{4},{5})",
+                        preformId, box.ClsId, box.Left, box.Top, box.Width, box.Height);
+                    SQLhelper.ExecuteNonQuery(sql2, 1);
+                }
             }
             IsDetecting = true;
             CanReviseBtnClick = false;

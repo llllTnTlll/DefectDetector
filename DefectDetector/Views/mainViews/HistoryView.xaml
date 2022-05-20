@@ -59,19 +59,19 @@
                                     <ColumnDefinition Width="225"/>
                                 </Grid.ColumnDefinitions>
                                 <Border x:Name="selectionBoard" Grid.Column="0" Width="5" Background="Transparent"/>
-                                <TextBlock Text="{Binding ItemId}" Width="auto"
+                                <TextBlock Text="{Binding PreformId}" Width="auto"
                                                Margin="10"
                                                Grid.Column="1"
                                                Foreground="{StaticResource PrimaryHueMidForegroundBrush}"
                                                VerticalAlignment="Center"/>
-                                <TextBlock Text="{Binding EntryTime}"
+                                <TextBlock Text="{Binding DetectionTime}"
                                                Grid.Column="2"
                                                VerticalAlignment="Center"
                                                Foreground="{StaticResource PrimaryHueMidForegroundBrush}"/>
                                 <TextBlock Foreground="{StaticResource PrimaryHueMidForegroundBrush}"
                                                Grid.Column="3"
                                                VerticalAlignment="Center"
-                                               Text="{Binding Inspector}"/>
+                                               Text="{Binding Operator}"/>
                                 <ListBox Grid.Column="4" 
                                          Margin="10"
                                          FlowDirection="RightToLeft"

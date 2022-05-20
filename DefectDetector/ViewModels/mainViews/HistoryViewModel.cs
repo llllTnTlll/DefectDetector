@@ -1,10 +1,12 @@
 ﻿using DefectDetector.Common;
+using DefectDetector.Helper;
 using DefectDetector.Model;
 using Prism.Events;
 using Prism.Mvvm;
 using System;
 using System.Collections.Generic;
 using System.Collections.ObjectModel;
+using System.Data.SqlClient;
 using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
@@ -35,13 +37,46 @@ namespace DefectDetector.ViewModels.mainViews
             });
 
             HistoryItems = new ObservableCollection<HistoryItemModel>();
-            ObservableCollection<BoxItem> boxes = new ObservableCollection<BoxItem>();
-            BoxItem box1 = new BoxItem() { ClsId = 1, Height = 100, Left = 200, Index = 0, Top = 200, Width = 100 };
-            BoxItem box2 = new BoxItem() { ClsId = 2, Height = 10, Left = 10, Index = 0, Top = 10, Width = 10 };
-            boxes.Add(box1);
-            boxes.Add(box2);
-            HistoryItems.Add(new HistoryItemModel() { ItemId = 0, EntryTime = DateTime.Now, Inspector = "张勇", Boxes = boxes });
-            HistoryItems.Add(new HistoryItemModel() { ItemId = 0, EntryTime = DateTime.Now, Inspector = "张勇", Boxes = boxes });
+
+            // 还原预制棒检测信息
+            string sql1 = "SELECT * FROM PreformInfo";
+            SqlDataReader reader1 = SQLhelper.ExecuteReader(sql1,1);
+            while (reader1.Read())
+            {
+                int preformId = (int)reader1["PreformId"];
+                bool isMarked = (bool)reader1["IsMarked"];
+                DateTime detectionTime = (DateTime)reader1["DetectionTime"];
+                string _operator = (string)reader1["Operator"];
+
+                // 还原缺陷信息
+                ObservableCollection<BoxItem> boxItems = new ObservableCollection<BoxItem>();
+                string sql2 = String.Format("SELECT * FROM DefectInfo WHERE PreformId = {0}", preformId);
+                SqlDataReader reader2 = SQLhelper.ExecuteReader(sql2, 1);
+                while (reader2.Read())
+                {
+                    BoxItem item = new BoxItem();
+                    item.ClsId = (int)reader2["DefectId"];
+                    item.Left = (double)reader2["BoxLeft"];
+                    item.Top = (double)reader2["BoxTop"];
+                    item.Width = (double)reader2["BoxWidth"];
+                    item.Height = (double)reader2["BoxHeight"];
+                    boxItems.Add(item);
+                }
+
+                HistoryItemModel historyItem = new HistoryItemModel()
+                {
+                    PreformId = preformId,
+                    IsMarked = isMarked,
+                    DetectionTime = detectionTime,
+                    Operator = _operator,
+                    Boxes = boxItems
+                };
+                HistoryItems.Add(historyItem);
+
+            }
+
+
+            
         }
     }
 }

@@ -11,27 +11,35 @@ namespace DefectDetector.Model
     public class HistoryItemModel:BindableBase
     {
         // 预制棒Id
-        private int _itemId;
-        public int ItemId
+        private int _preformId;
+        public int PreformId
         {
-            get { return _itemId; }
-            set { SetProperty(ref _itemId, value); }
+            get { return _preformId; }
+            set { SetProperty(ref _preformId, value); }
+        }
+
+        // 是否被标记
+        private bool _isMarked;
+        public bool IsMarked
+        {
+            get { return _isMarked; }
+            set { SetProperty(ref _isMarked, value); }
         }
 
         // 检测时间
-        private DateTime _entryTime;
-        public DateTime EntryTime
+        private DateTime _detectionTime;
+        public DateTime DetectionTime
         {
-            get { return _entryTime; }
-            set { SetProperty(ref _entryTime, value); }
+            get { return _detectionTime; }
+            set { SetProperty(ref _detectionTime, value); }
         }
 
         // 检测员
-        private string _inspector;
-        public string Inspector
+        private string _operator;
+        public string Operator
         {
-            get { return _inspector; }
-            set { SetProperty(ref _inspector, value); }
+            get { return _operator; }
+            set { SetProperty(ref _operator, value); }
         }
 
         // 瑕疵预测框
